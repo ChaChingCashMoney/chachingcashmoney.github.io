@@ -1,4 +1,4 @@
-const CACHE_NAME = "site-cache-v6";
+const CACHE_NAME = "site-cache-v7";
 
 const ASSETS = [
   "/",
@@ -13,7 +13,7 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
   );
-  self.skipWaiting();
+  // IMPORTANT: do NOT skipWaiting here; we want "update available" banner flow
 });
 
 self.addEventListener("activate", (event) => {
@@ -25,18 +25,22 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+});
+
 self.addEventListener("fetch", (event) => {
   const req = event.request;
 
-  // ✅ Critical: offline fallback for full page navigations
+  // Offline fallback for full page navigations
   if (req.mode === "navigate") {
-    event.respondWith(
-      fetch(req).catch(() => caches.match("/index.html"))
-    );
+    event.respondWith(fetch(req).catch(() => caches.match("/index.html")));
     return;
   }
 
-  // Cache-first for everything else (icons, manifest, app.js)
+  // Cache-first for app assets
   event.respondWith(
     caches.match(req).then((cached) => cached || fetch(req))
   );
