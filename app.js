@@ -1,8 +1,14 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-  const APP_VERSION = "1.0.3";
+const APP_VERSION = "1.0.3";
 // ===== What's New (shows once per version) =====
 const RELEASE_NOTES = {
+  const RELEASE_NOTES = {
+  "1.0.3": [
+    "Added 'What’s New' version modal.",
+    "Improved version tracking system.",
+    "Refined update deployment workflow."
+  ],
   "1.0.2": [
     "Update banner pipeline verified (Refresh applies the new version).",
     "Improved offline update reliability with cache bump workflow."
