@@ -1,6 +1,6 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-  const APP_VERSION = "1.0.2";
+  const APP_VERSION = "1.0.3";
 // ===== What's New (shows once per version) =====
 const RELEASE_NOTES = {
   "1.0.2": [
