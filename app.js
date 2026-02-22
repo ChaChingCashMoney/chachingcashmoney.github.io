@@ -50,30 +50,6 @@ function showWhatsNew(version){
   backdrop.style.display = "flex";
 }
 
-  function showFullChangelog(){
-  const backdrop = document.getElementById("whatsNewBackdrop");
-  const title = document.getElementById("whatsNewTitle");
-  const body = document.getElementById("whatsNewBody");
-
-  if (!backdrop || !title || !body) return;
-
-  title.textContent = "Full Changelog";
-
-  const versions = Object.keys(RELEASE_NOTES)
-    .sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
-
-  body.innerHTML = versions.map(v => `
-    <div style="margin-bottom:14px;">
-      <div style="font-weight:900; margin-bottom:4px;">v${escapeHtml(v)}</div>
-      <ul style="margin:0; padding-left:18px;">
-        ${(RELEASE_NOTES[v] || []).map(n => `<li style="margin:4px 0;">${escapeHtml(n)}</li>`).join("")}
-      </ul>
-    </div>
-  `).join("");
-
-  backdrop.style.display = "flex";
-}
-
 function closeWhatsNew(){
   const backdrop = document.getElementById("whatsNewBackdrop");
   if (backdrop) backdrop.style.display = "none";
@@ -89,11 +65,6 @@ if (closeBtn) closeBtn.addEventListener("click", closeWhatsNew);
 if (backdrop) backdrop.addEventListener("click", (e) => {
   if (e.target && e.target.id === "whatsNewBackdrop") closeWhatsNew();
 });
-
-const changelogBtn = document.getElementById("viewChangelogBtn");
-if (changelogBtn) {
-  changelogBtn.addEventListener("click", () => showFullChangelog());
-}
 
 // Show once per version...
 const lastSeen = localStorage.getItem("last_seen_version");
