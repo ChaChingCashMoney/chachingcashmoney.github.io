@@ -1,6 +1,6 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-  const APP_VERSION = "1.0.0";
+  const APP_VERSION = "1.0.1";
 
   // Put version in UI
   const vb = document.getElementById("versionBadge");
