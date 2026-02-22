@@ -1,7 +1,71 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
   const APP_VERSION = "1.0.2";
+// ===== What's New (shows once per version) =====
+const RELEASE_NOTES = {
+  "1.0.2": [
+    "Update banner pipeline verified (Refresh applies the new version).",
+    "Improved offline update reliability with cache bump workflow."
+  ],
+  "1.0.1": [
+    "Version badge added.",
+    "Install button enabled on supported devices."
+  ],
+  "1.0.0": [
+    "Initial PWA release: installable + offline support.",
+    "APP Tracker core functionality (log, CSV export, bankroll manager)."
+  ]
+};
 
+function escapeHtml(s){
+  return String(s)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function showWhatsNew(version){
+  const backdrop = document.getElementById("whatsNewBackdrop");
+  const title = document.getElementById("whatsNewTitle");
+  const body = document.getElementById("whatsNewBody");
+  const notes = RELEASE_NOTES[version] || ["Bug fixes and improvements."];
+
+  if (!backdrop || !title || !body) return;
+
+  title.textContent = `What’s New in v${version}`;
+  body.innerHTML = `
+    <ul style="margin:0; padding-left:18px;">
+      ${notes.map(n => `<li style="margin:6px 0;">${escapeHtml(n)}</li>`).join("")}
+    </ul>
+  `;
+
+  backdrop.style.display = "flex";
+}
+
+function closeWhatsNew(){
+  const backdrop = document.getElementById("whatsNewBackdrop");
+  if (backdrop) backdrop.style.display = "none";
+  localStorage.setItem("last_seen_version", APP_VERSION);
+}
+
+// Wire close actions
+(() => {
+  const closeBtn = document.getElementById("whatsNewCloseBtn");
+  const backdrop = document.getElementById("whatsNewBackdrop");
+
+  if (closeBtn) closeBtn.addEventListener("click", closeWhatsNew);
+  if (backdrop) backdrop.addEventListener("click", (e) => {
+    if (e.target && e.target.id === "whatsNewBackdrop") closeWhatsNew();
+  });
+
+  // Show once per version (only after the new version is actually running)
+  const lastSeen = localStorage.getItem("last_seen_version");
+  if (lastSeen !== APP_VERSION) {
+    showWhatsNew(APP_VERSION);
+  }
+})();
   // Put version in UI
   const vb = document.getElementById("versionBadge");
   const vbf = document.getElementById("versionBadgeFooter");
