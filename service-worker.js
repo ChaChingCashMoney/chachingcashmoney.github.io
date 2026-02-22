@@ -1,8 +1,12 @@
-const CACHE_NAME = "site-cache-v3";
+const CACHE_NAME = "site-cache-v4";
+
 const ASSETS = [
   "/",
   "/index.html",
-  "/manifest.webmanifest"
+  "/app.js",
+  "/manifest.webmanifest",
+  "/icons/icon-192.png",
+  "/icons/icon-512.png"
 ];
 
 self.addEventListener("install", (event) => {
