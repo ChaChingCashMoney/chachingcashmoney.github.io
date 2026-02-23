@@ -239,9 +239,19 @@ if (lastSeen !== APP_VERSION) {
   let S = load() || defaultState();
 S.undoStack = []; // never restore undo history from storage
 
-  function save(){
-  // Don't persist undo history (it explodes storage size fast)
-  const toStore = { ...S, undoStack: [] };
+function save(){
+  const MAX_LOG_TO_STORE = 5000;
+
+  const trimmedLog = (S.log && S.log.length > MAX_LOG_TO_STORE)
+    ? S.log.slice(-MAX_LOG_TO_STORE)
+    : S.log;
+
+  const toStore = {
+    ...S,
+    log: trimmedLog,
+    undoStack: [] // never persist undo history
+  };
+
   localStorage.setItem(STORAGE_KEY, JSON.stringify(toStore));
 }
   function load(){ try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch(e){ return null; } }
