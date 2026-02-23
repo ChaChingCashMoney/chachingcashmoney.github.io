@@ -71,6 +71,11 @@
     .badge b{font-size:12px;}
     .updatebar{display:none;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:10px 0 12px;padding:10px 12px;border-radius:14px;border:1px solid rgba(74,163,255,.35);background:rgba(74,163,255,.08);}
     .updatebar strong{font-size:13px;}
+    /* bankroll row fix (prevents overlap) */
+    .bankrollRow{display:flex;gap:10px;margin-top:8px;align-items:flex-end;}
+    .bankrollRow > div:first-child{flex:1;min-width:0;}
+    .bankrollRow > div:last-child{flex:0 0 110px;}
+    #applyBankrollBtn{width:100%;}
   </style>
 </head>
 
@@ -156,13 +161,13 @@
           <label style="margin:0;">Enable</label>
         </div>
       </div>
-      <div class="row" style="margin-top:8px; gap:10px;">
+      <div class="bankrollRow">
         <div style="flex:1 1 160px; min-width:0;">
           <label>Starting Bankroll</label>
           <input id="bankrollStart" inputmode="decimal" placeholder="e.g., 300"/>
         </div>
        <div style="flex:0 0 104px; display:flex; align-items:flex-end;">
-          <button class="btn primary" id="applyBankrollBtn" style="padding:10px 12px; width:104px;">Apply</button>
+          <button class="btn primary" id="applyBankrollBtn" style="padding:10px 12px;">Apply</button>
        </div>
       </div>
       <div class="note">
@@ -249,13 +254,14 @@
 
 </div>
 
-<div class="footerbar">
-  <div class="wrap">
+<div class="footerbar" id="footerBar">
+  <div class="wrap" style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
     <div class="note">
-      <span class="badge" style="margin-right:8px;">v <b id="versionBadgeFooter">—</b></span>
       Rules baked in: NORMAL capped (A:30, B:60). Split triggers only from NORMAL cap-loss (roulette: cap+green counts). Split freezes ladder. Tie during split = push (repeat same split bet). TP ends immediately in SPLIT; TP ends at streak loss in STREAK.
     </div>
+    <button id="closeFooterBtn" style="background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;">✕</button>
   </div>
+</div>
 </div>
 
 <!-- Tooltip Modal -->
@@ -294,5 +300,19 @@
 
 <!-- App logic moved here -->
 <script src="/app.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const closeBtn = document.getElementById("closeFooterBtn");
+  const footer = document.getElementById("footerBar");
+
+  if (closeBtn && footer) {
+    closeBtn.addEventListener("click", function () {
+      footer.style.display = "none";
+    });
+  }
+});
+</script>
+
 </body>
 </html>
