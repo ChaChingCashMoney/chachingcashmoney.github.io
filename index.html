@@ -360,8 +360,15 @@
         <li><b>Trigger:</b> only from a <b>NORMAL</b> loss when the placed bet was the cap</li>
         <li><b>Ledger start:</b> $60 (A) or $120 (B)</li>
         <li><b>Probe:</b> bet minimum ($5 A / $10 B). Loss → add probe to ledger and probe again. Win → subtract probe and move to paydown.</li>
-        <li><b>Paydown:</b> bet ceil(ledger/2). If win → bet remainder. If either paydown bet loses → return to probe.</li>
+        <li>
+         <b>Paydown:</b> After a winning probe, divide the current ledger in half and round up.
+            Bet that amount first. 
+        <br/>
+            • If it wins → bet the remaining balance to fully clear the ledger.  
+            • If either paydown bet loses → add that amount back to the ledger and return to the minimum probe bet.
+        </li>
         <li><b>Max paydown bet:</b> capped at 18× base ($90 A / $180 B)</li>
+        <li><b>Exit:</b> when the split ledger reaches 0, split ends; app returns to NORMAL at the split-clear anchor (e.g., $15 in A / $30 in B)</li>
         <li><b>Ladder freeze:</b> while SPLIT is active, the NORMAL ladder bet does not update</li>
         <li><b>TP handling:</b> TP ends the game immediately during split</li>
         <li><b>Ties in split (baccarat):</b> push; ledger unchanged; repeat same split bet</li>
