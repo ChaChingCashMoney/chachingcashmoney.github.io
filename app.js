@@ -5,7 +5,7 @@ const RELEASE_NOTES = {
   "1.0.3": [
     "Fixed localStorage quota crash (undo history no longer persisted).",
     "Added log size safeguard to prevent storage overflow.",
-    "Improved overall session stability."
+    "Improved overall session stability.",
     "UI polish and stability improvements."
   ],
   "1.0.2": [
