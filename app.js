@@ -1,7 +1,13 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-const APP_VERSION = "1.0.3";
+const APP_VERSION = "1.0.4";
 const RELEASE_NOTES = {
+  "1.0.4": [
+    "Added 'Learn Strategy' button in top bar.",
+    "Added full APP Strategy modal with detailed rule reference.",
+    "Added copy-to-clipboard for strategy text.",
+    "UI stability improvements."
+  ],
   "1.0.3": [
     "Fixed localStorage quota crash (undo history no longer persisted).",
     "Added log size safeguard to prevent storage overflow.",
