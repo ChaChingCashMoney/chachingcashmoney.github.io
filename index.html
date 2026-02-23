@@ -360,12 +360,12 @@
         <li><b>Trigger:</b> only from a <b>NORMAL</b> loss when the placed bet was the cap</li>
         <li><b>Ledger start:</b> $60 (A) or $120 (B)</li>
         <li><b>Probe:</b> bet minimum ($5 A / $10 B). Loss → add probe to ledger and probe again. Win → subtract probe and move to paydown.</li>
-        <li>
-         <b>Paydown:</b> After a winning probe, divide the current ledger in half and round up.
-            Bet that amount first. 
-        <br/>
-            • If it wins → bet the remaining balance to fully clear the ledger.  
-            • If either paydown bet loses → add that amount back to the ledger and return to the minimum probe bet.
+        <li><b>Paydown:</b> After a winning probe, divide the current ledger in half and round up.
+            Bet that amount first</b>. 
+          <ul style="margin:6px 0 0; padding-left:18px;">
+           <li><b>If it wins → bet the remaining balance to fully clear the ledger.</li>  
+           <li><b>If either paydown bet loses → add that amount back to the ledger and return to the minimum probe bet.</li>
+         </ul>
         </li>
         <li><b>Max paydown bet:</b> capped at 18× base ($90 A / $180 B)</li>
         <li><b>Exit:</b> when the split ledger reaches 0, split ends; app returns to NORMAL at the split-clear anchor (e.g., $15 in A / $30 in B)</li>
