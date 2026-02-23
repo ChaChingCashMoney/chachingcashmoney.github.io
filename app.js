@@ -1,6 +1,25 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
 const APP_VERSION = "1.0.3";
+const RELEASE_NOTES = {
+  "1.0.3": [
+    "Added What’s New modal.",
+    "Added Full Changelog view.",
+    "UI polish and stability improvements."
+  ],
+  "1.0.2": [
+    "Update banner pipeline verified (Refresh applies the new version).",
+    "Improved offline update reliability with cache bump workflow."
+  ],
+  "1.0.1": [
+    "Version badge added.",
+    "Install button enabled on supported devices."
+  ],
+  "1.0.0": [
+    "Initial PWA release: installable + offline support.",
+    "APP Tracker core functionality (log, CSV export, bankroll manager)."
+  ]
+};
 function escapeHtml(s){
   return String(s)
     .replaceAll("&","&amp;")
