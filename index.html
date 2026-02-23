@@ -402,6 +402,50 @@
 <!-- App logic moved here -->
 <script src="/app.js"></script>
 
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const openBtn = document.getElementById("openStrategyBtn");
+  const back = document.getElementById("strategyBackdrop");
+  const close1 = document.getElementById("closeStrategyBtn");
+  const close2 = document.getElementById("closeStrategyBtn2");
+  const copyBtn = document.getElementById("copyStrategyBtn");
+  const bodyEl = document.getElementById("strategyBody");
+
+  if (!openBtn || !back) return;
+
+  function openStrategy(){ back.style.display = "flex"; }
+  function closeStrategy(){ back.style.display = "none"; }
+
+  openBtn.addEventListener("click", openStrategy);
+  if (close1) close1.addEventListener("click", closeStrategy);
+  if (close2) close2.addEventListener("click", closeStrategy);
+
+  // click outside modal closes
+  back.addEventListener("click", (e) => {
+    if (e.target === back) closeStrategy();
+  });
+
+  // escape closes
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && back.style.display === "flex") closeStrategy();
+  });
+
+  // Copy (plain text)
+  if (copyBtn) {
+    copyBtn.addEventListener("click", async () => {
+      try{
+        const text = (bodyEl ? bodyEl.innerText : "").trim();
+        await navigator.clipboard.writeText(text);
+        copyBtn.textContent = "Copied!";
+        setTimeout(()=>copyBtn.textContent="Copy Strategy Text", 900);
+      }catch(err){
+        alert("Copy failed (clipboard permissions). You can manually select + copy the text.");
+      }
+    });
+  }
+});
+</script>
+
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   const closeBtn = document.getElementById("closeFooterBtn");
