@@ -9,7 +9,7 @@ function escapeHtml(s){
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
 }
-
+  
 function showWhatsNew(version){
   const backdrop = document.getElementById("whatsNewBackdrop");
   const title = document.getElementById("whatsNewTitle");
