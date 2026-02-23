@@ -237,8 +237,13 @@ if (lastSeen !== APP_VERSION) {
   });
 
   let S = load() || defaultState();
+S.undoStack = []; // never restore undo history from storage
 
-  function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(S)); }
+  function save(){
+  // Don't persist undo history (it explodes storage size fast)
+  const toStore = { ...S, undoStack: [] };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(toStore));
+}
   function load(){ try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch(e){ return null; } }
 
   function pushUndo(){
