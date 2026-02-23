@@ -3,8 +3,9 @@
 const APP_VERSION = "1.0.3";
 const RELEASE_NOTES = {
   "1.0.3": [
-    "Added What’s New modal.",
-    "Added Full Changelog view.",
+    "Fixed localStorage quota crash (undo history no longer persisted).",
+    "Added log size safeguard to prevent storage overflow.",
+    "Improved overall session stability."
     "UI polish and stability improvements."
   ],
   "1.0.2": [
