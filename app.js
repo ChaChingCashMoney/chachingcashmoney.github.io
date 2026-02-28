@@ -165,6 +165,8 @@ if (lastSeen !== APP_VERSION) {
   const BANKER_COMMISSION = 0.05;
   const ANCHOR_STREAK_A = 18;
   const ANCHOR_SPLITCLEAR_A = 15;
+  const DAY_TP = 80;
+  const DAY_SL = 300;
 
   const tips = {
     autoSeries: {
@@ -236,6 +238,8 @@ if (lastSeen !== APP_VERSION) {
     half2: null,
 
     gamePnL: 0,
+    dayPnL: 0,
+    dayNoticeShown: { tp:false, sl:false },
     pendingOutcome: null,
 
     endModalOpen: false,
@@ -551,11 +555,35 @@ function save(){
 
     let delta = 0;
     if(result !== "P" && bet > 0){
-      delta = settleProfit(bet, won, pick);
-      S.gamePnL = +(S.gamePnL + delta).toFixed(2);
+    delta = settleProfit(bet, won, pick);
+    S.gamePnL = +(S.gamePnL + delta).toFixed(2);
+    S.dayPnL  = +((S.dayPnL || 0) + delta).toFixed(2);
     }
 
     logRow({ outcome: formatOutcome(outcome), pick: pick ? formatOutcome(pick) : "—", bet, result, delta: +delta.toFixed(2), note: "" });
+
+    // ===== Day TP/SL popup (informational only) =====
+    if (!S.dayNoticeShown.tp && (S.dayPnL || 0) >= DAY_TP) {
+    S.dayNoticeShown.tp = true;
+    alert(
+    `You’ve hit your Day Target of +$${DAY_TP}.
+    Current Day Profit: $${S.dayPnL.toFixed(2)}
+
+    Consider locking it in.
+    Select "New Evening" to begin a new day.`
+    );
+    }
+
+    if (!S.dayNoticeShown.sl && (S.dayPnL || 0) <= -DAY_SL) {
+    S.dayNoticeShown.sl = true;
+    alert(
+    `You’ve hit your Day Stop of -$${DAY_SL}.
+    Current Day Result: $${S.dayPnL.toFixed(2)}
+
+    Discipline protects capital.
+    Select "New Evening" to reset for a new day.`
+    );
+    }
 
     if(isTrue(outcome)) S.lastTrue = outcome;
     S.pendingOutcome = null;
