@@ -1,7 +1,10 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-const APP_VERSION = "1.0.4";
+const APP_VERSION = "1.0.5";
 const RELEASE_NOTES = {
+  "1.0.5": [
+    "Added 'Day PnL' popup notification."
+  ],
   "1.0.4": [
     "Added 'Learn Strategy' button in top bar.",
     "Added full APP Strategy modal with detailed rule reference.",
