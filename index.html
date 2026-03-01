@@ -77,7 +77,7 @@
     .wrap{
       max-width:var(--wrap);
       margin:0 auto;
-      padding:14px 14px 170px; /* room for dock + tabs */
+      padding:14px 14px 110px; /* room for dock + tabs */
     }
 
     h1{font-size:18px;margin:0;}
@@ -303,29 +303,6 @@
     .hudRight{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
     .hudPill{padding:7px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);}
 
-    /* Sticky Play actions (Clear/Submit/Undo) */
-    .playActions{
-      position:fixed;
-      left:0; right:0;
-      bottom:68px; /* above tabbar */
-      z-index:85;
-      padding:10px 10px;
-      pointer-events:none;
-    }
-    .playActions-inner{
-      max-width:var(--wrap);
-      margin:0 auto;
-      display:flex;
-      gap:10px;
-      pointer-events:auto;
-    }
-    .playActions-inner button{
-      flex:1;
-      padding:12px 12px;
-      border-radius:20px;
-      box-shadow:0 12px 22px rgba(0,0,0,.20);
-    }
-
     /* Info button */
     .infoBtn{
       display:inline-flex;
@@ -525,9 +502,9 @@
           </div>
           <div class="actions" style="align-items:center;">
             <!-- These IDs are used by app.js -->
-            <button class="btn neutral" id="clearSelBtn" style="padding:10px 12px;">Clear</button>
+            <button class="btn neutral" id="clearSelBtn" style="padding:10px 12px; opacity:.9;">Clear</button>
             <button class="btn primary" id="submitSelBtn" style="padding:10px 12px;">Submit</button>
-            <button class="btn neutral" id="undoBtn" style="padding:10px 12px;">Undo</button>
+            <button class="btn neutral" id="undoBtn" style="padding:10px 12px; opacity:.9;">Undo</button>
           </div>
         </div>
 
@@ -536,15 +513,6 @@
         <!-- Outcome buttons rendered by app.js into #buttons -->
         <div class="grid" id="buttons"></div>
         <div class="note" id="hint"></div>
-      </div>
-    </div>
-
-    <!-- Sticky bottom actions for play (thumb reachable) -->
-    <div class="playActions" aria-hidden="false">
-      <div class="playActions-inner">
-        <button class="btn neutral" id="clearSelBtnDock" type="button">Clear</button>
-        <button class="btn primary" id="submitSelBtnDock" type="button">Submit</button>
-        <button class="btn neutral" id="undoBtnDock" type="button">Undo</button>
       </div>
     </div>
 
@@ -921,17 +889,6 @@ document.addEventListener("DOMContentLoaded", () => {
   tabPlay.addEventListener("click", () => setActive("play"));
   tabSetup.addEventListener("click", () => setActive("setup"));
   tabLog.addEventListener("click", () => setActive("log"));
-
-  // Dock buttons proxy to your existing buttons (so app.js logic runs)
-  const proxy = (fromId, toId) => {
-    const from = document.getElementById(fromId);
-    const to = document.getElementById(toId);
-    if (!from || !to) return;
-    from.addEventListener("click", () => to.click());
-  };
-  proxy("clearSelBtnDock", "clearSelBtn");
-  proxy("submitSelBtnDock", "submitSelBtn");
-  proxy("undoBtnDock", "undoBtn");
 
   // Log view buttons proxy to app.js ids (since ids must be unique)
   const exportMain = document.getElementById("exportCsvBtn");
