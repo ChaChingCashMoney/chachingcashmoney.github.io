@@ -891,6 +891,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // Force Setup tab on load
   setActive("setup");
 
+    // Start Game → jump to Play tab (app.js still handles starting the game)
+  const startGameBtn = document.getElementById("newGameBtn");
+  if (startGameBtn) {
+    startGameBtn.addEventListener("click", () => setActive("play"));
+  }
+
   // Mirror HUD values into Setup preview
   const mirrorText = (srcId, mirrorId) => {
     const src = document.getElementById(srcId);
