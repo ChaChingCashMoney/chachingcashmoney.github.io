@@ -1116,13 +1116,23 @@ document.addEventListener("DOMContentLoaded", () => {
   mirrorText("nextSide", "nextSideSetup");
   mirrorText("nextBet", "nextBetSetup");
   mirrorText("seriesShow", "seriesShowSetup");
-  
-    // Minimal Play toggle wiring
+
+    // Minimal Play toggle wiring (persisted)
   const advToggle = document.getElementById("showAdvancedPlay");
+  const ADV_KEY = "ui_show_advanced_play";
+
+  // Load saved preference (default OFF)
+  const saved = localStorage.getItem(ADV_KEY);
+  const advOn = (saved === "1");
+  document.body.classList.toggle("show-advanced", advOn);
 
   if (advToggle) {
+    advToggle.checked = advOn;
+
     advToggle.addEventListener("change", () => {
-      document.body.classList.toggle("show-advanced", advToggle.checked);
+      const on = !!advToggle.checked;
+      localStorage.setItem(ADV_KEY, on ? "1" : "0");
+      document.body.classList.toggle("show-advanced", on);
     });
   }
 });
