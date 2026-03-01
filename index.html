@@ -471,6 +471,14 @@
     .view{display:none;}
     .view.active{display:block;}
 
+/* Minimal Play mode: hide advanced UI unless enabled */
+[data-adv="flex"]{
+  display: none !important;
+}
+[data-adv="inlineflex"]{
+  display: none !important;
+}
+
     /* Outcome styling */
     #buttons button{
       border-radius:20px;
@@ -601,6 +609,22 @@
 
         <div class="sep"></div>
 
+<div class="toggleRow">
+  <div class="toggle">
+    <input type="checkbox" id="showAdvancedPlay"/>
+    <label style="margin:0;display:flex;gap:8px;align-items:center;">
+      Show Advanced Stats on Play
+      <span class="infoBtn" id="advStatsInfoBtn" title="What is this?">i</span>
+    </label>
+  </div>
+</div>
+
+<div class="note" style="margin-top:8px;">
+  Default Play stays minimal for live table use. Enable this to show extra data (mode, ledger, ladder, etc.).
+</div>
+
+        <div class="sep"></div>
+
         <div class="muted" style="font-size:12px; font-weight:1000;">Bankroll Manager</div>
         <div class="sep"></div>
 
@@ -687,7 +711,7 @@
           <span class="hudPill"><span class="k">SESSION NET</span> <span class="v" id="bankrollNet">—</span></span>
           <span class="hudPill"><span class="k">GAME PnL</span> <span class="v" id="gamePnL">0</span></span>
         </div>
-        <div class="hudRight">
+        <div class="hudRight" data-adv="flex">
           <span class="hudPill"><span class="k">SERIES</span> <span class="v" id="seriesShow">—</span></span>
           <span class="hudPill"><span class="k">MODE</span> <span class="v" id="mode">—</span></span>
           <span class="hudPill"><span class="k">STATE</span> <span class="v" id="state">NORMAL</span></span>
@@ -705,12 +729,12 @@
         <div class="row" style="align-items:center;">
           <div class="pill"><span class="k">NEXT SIDE</span> <span class="v big" id="nextSide">—</span></div>
           <div class="pill"><span class="k">NEXT BET</span> <span class="v big" id="nextBet">—</span></div>
-          <div class="pill"><span class="k">MODE LOSSES</span> <span class="v" id="modeLosses">—</span></div>
+          <div class="pill" data-adv="inlineflex"><span class="k">MODE LOSSES</span> <span class="v" id="modeLosses">—</span></div>
         </div>
 
         <div class="sep"></div>
 
-        <div class="row" style="gap:10px;">
+        <div class="row" style="gap:10px;" data-adv="flex">
           <div class="pill"><span class="k">CONSEC WINS (SAME)</span> <span class="v" id="cw">0</span></div>
           <div class="pill"><span class="k">LADDER BET</span> <span class="v" id="ladderBet">—</span></div>
           <div class="pill"><span class="k">SPLIT LEDGER</span> <span class="v" id="ledger">—</span></div>
@@ -1086,6 +1110,15 @@ document.addEventListener("DOMContentLoaded", () => {
   mirrorText("nextSide", "nextSideSetup");
   mirrorText("nextBet", "nextBetSetup");
   mirrorText("seriesShow", "seriesShowSetup");
+  
+    // Minimal Play toggle wiring
+  const advToggle = document.getElementById("showAdvancedPlay");
+
+  if (advToggle) {
+    advToggle.addEventListener("change", () => {
+      document.body.classList.toggle("show-advanced", advToggle.checked);
+    });
+  }
 });
 </script>
 
