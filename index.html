@@ -296,6 +296,15 @@
       box-shadow:var(--shadow);
       padding:10px 12px;
     }
+/* Mobile: HUD should scroll (no sticky) */
+@media (max-width: 760px){
+  .gameHud{
+    position: static;
+    top: auto;
+    margin-top: 10px;
+    box-shadow: none;
+  }
+}
     .hudRow{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;}
     .hudLeft{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
     .hudRight{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
