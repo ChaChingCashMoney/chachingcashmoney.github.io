@@ -209,6 +209,20 @@ if (lastSeen !== APP_VERSION) {
         <div>Enter Starting Bankroll and press <b>Apply</b>.</div>
         <div style="margin-top:8px;">When a game ends (TP or SL), bankroll updates by that game’s final PnL.</div>
         <div class="muted" style="margin-top:8px;">Bankroll values are not included in CSV export (by design).</div>`
+    },
+        advancedPlay: {
+      title: "Advanced Play Stats",
+      body: `
+        <div>When enabled, the Play screen shows additional live data:</div>
+        <ul style="margin:8px 0 0; padding-left:18px;">
+          <li>Mode Losses</li>
+          <li>Consecutive Wins (SAME)</li>
+          <li>Ladder Bet</li>
+          <li>Split Ledger / Phase / Next Split Bet</li>
+        </ul>
+        <div class="muted" style="margin-top:8px;">
+          These are hidden by default for a cleaner live-table view.
+        </div>`
     }
   };
 
