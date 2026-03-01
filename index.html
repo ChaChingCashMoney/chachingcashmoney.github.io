@@ -343,6 +343,40 @@
     .modal .btnrow{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:12px;}
     .modal .btnrow button{min-width:140px;}
 
+    /* Daily Discipline modal styling */
+.disciplineHero{
+  border:1px solid rgba(247,201,72,.22);
+  background:rgba(247,201,72,.08);
+  border-radius:18px;
+  padding:12px;
+  box-shadow:0 14px 30px rgba(0,0,0,.18);
+}
+.disciplineTargets{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:8px;
+}
+.disciplinePill{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:10px 12px;
+  border-radius:999px;
+  font-weight:1100;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.06);
+  min-width:120px;
+}
+.disciplinePill.good{
+  border-color:rgba(46,204,113,.55);
+  background:rgba(46,204,113,.16);
+}
+.disciplinePill.danger{
+  border-color:rgba(255,90,95,.55);
+  background:rgba(255,90,95,.18);
+}
+
     /* Changelog (casino aesthetic) */
 .changelogHeader{
   display:flex;
@@ -948,6 +982,47 @@
   </div>
 </div>
 
+  <!-- Daily Session Discipline Modal (once per casino day) -->
+<div class="backdrop" id="disciplineBackdrop" role="dialog" aria-modal="true" aria-labelledby="disciplineTitle">
+  <div class="modal" style="width:min(640px,100%);">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+      <h2 id="disciplineTitle" style="margin:0;">Daily Session Discipline (Required)</h2>
+    </div>
+
+    <div class="sep"></div>
+
+    <div class="content">
+      <div class="disciplineHero">
+        <div><b>End the day at:</b></div>
+        <div class="disciplineTargets">
+          <span class="disciplinePill good">+$80 TP</span>
+          <span class="disciplinePill danger">−$300 SL</span>
+        </div>
+
+        <div class="disciplineSubtle muted" style="margin-top:10px;">
+          This notice appears once per casino day (resets at <b>5:00 AM PT</b>).
+        </div>
+      </div>
+
+      <div class="sep"></div>
+
+      <p style="margin:0;">
+        This system is designed for controlled daily sessions.
+        Continuing beyond these limits increases volatility and reduces long-term consistency.
+      </p>
+
+      <div class="note" style="margin-top:10px;">
+        Discipline is part of the strategy.
+      </div>
+    </div>
+
+    <div class="btnrow">
+      <button class="btn neutral" id="disciplineOpenStrategyBtn" type="button">Learn Strategy</button>
+      <button class="btn primary" id="disciplineAcknowledgeBtn" type="button">I Understand</button>
+    </div>
+  </div>
+</div>
+
 <!-- Load your app logic -->
 <script src="/app.js"></script>
 
@@ -1259,6 +1334,80 @@ document.addEventListener("DOMContentLoaded", () => {
   const obs = new MutationObserver(rebuildCards);
   obs.observe(tbody, { childList:true, subtree:true, characterData:true });
   rebuildCards();
+});
+</script>
+
+  <script>
+/* ----------------------------------------------------
+   Daily Session Discipline modal
+   - Shows once per "casino day" on app open
+   - Casino day resets at 5:00 AM PT (America/Los_Angeles)
+----------------------------------------------------- */
+document.addEventListener("DOMContentLoaded", () => {
+  const back = document.getElementById("disciplineBackdrop");
+  const ack = document.getElementById("disciplineAcknowledgeBtn");
+  const openStrategy = document.getElementById("disciplineOpenStrategyBtn");
+  const strategyOpenBtn = document.getElementById("openStrategyBtn");
+
+  if (!back || !ack) return;
+
+  const STORAGE_KEY = "daily_discipline_seen_casino_day_pt";
+  const CASINO_ROLLOVER_HOUR = 5;
+  const TZ = "America/Los_Angeles";
+
+  function casinoDayKeyPT(){
+    try{
+      const now = new Date();
+      const parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: TZ,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        hour12: false
+      }).formatToParts(now);
+
+      const get = (type) => parts.find(p => p.type === type)?.value;
+      const yyyy = get("year");
+      const mm = get("month");
+      const dd = get("day");
+      const hh = parseInt(get("hour") || "0", 10);
+
+      const baseKey = `${yyyy}-${mm}-${dd}`;
+
+      if (hh < CASINO_ROLLOVER_HOUR) {
+        const d = new Date(`${baseKey}T12:00:00Z`);
+        d.setUTCDate(d.getUTCDate() - 1);
+        return d.toISOString().slice(0,10);
+      }
+
+      return baseKey;
+    } catch {
+      return new Date().toISOString().slice(0,10);
+    }
+  }
+
+  function open(){ back.style.display = "flex"; }
+  function close(){ back.style.display = "none"; }
+
+  const todayCasino = casinoDayKeyPT();
+  const lastSeen = localStorage.getItem(STORAGE_KEY);
+
+  if (lastSeen !== todayCasino) {
+    open();
+  }
+
+  ack.addEventListener("click", () => {
+    localStorage.setItem(STORAGE_KEY, casinoDayKeyPT());
+    close();
+  });
+
+  if (openStrategy && strategyOpenBtn) {
+    openStrategy.addEventListener("click", () => {
+      close();
+      strategyOpenBtn.click();
+    });
+  }
 });
 </script>
 
