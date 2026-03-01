@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 
   <!-- PWA essentials -->
-  <meta name="theme-color" content="#111111" />
+  <meta name="theme-color" content="#041A14" />
   <link rel="manifest" href="/manifest.webmanifest" />
   <link rel="icon" href="/icons/icon-192.png" />
 
@@ -19,91 +19,444 @@
   <title>Adaptive Phase Progression Betting System</title>
 
   <style>
-    :root{--bg:#0b0f14;--card:#121826;--text:#e6eefb;--muted:#9fb0c5;--accent:#4aa3ff;--bad:#ff5a5f;--good:#42d392;}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);}
-    .wrap{max-width:1100px;margin:0 auto;padding:16px 14px 140px;}
-    h1{font-size:18px;margin:0 0 10px;}
+    :root{
+      /* Classic Casino (felt + rail + gold) */
+      --bg:#0B3D2E;              /* felt */
+      --bg2:#082E23;             /* deeper felt */
+      --panel:#062A20;           /* cards */
+      --panel2:#052218;          /* deeper cards */
+      --rail:#041A14;            /* header/nav */
+      --text:#EAF4EF;
+      --muted:rgba(234,244,239,.72);
+      --border:rgba(255,255,255,.10);
+
+      /* UI actions */
+      --primary:#F7C948;         /* gold */
+      --primaryText:#1B1404;
+      --danger:#FF5A5F;
+      --good:#2ECC71;
+
+      /* Outcome semantics */
+      --rouletteRed:#E53935;
+      --rouletteBlack:#111317;
+      --rouletteGreen:#2ECC71;
+
+      --playerBlue:#1E88E5;
+      --bankerRed:#D32F2F;
+      --tieGreen:#2ECC71;
+
+      /* layout */
+      --wrap:1100px;
+      --radius:18px;
+      --shadow:0 14px 44px rgba(0,0,0,.26);
+    }
+
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 20% -10%, rgba(247,201,72,.12), transparent 60%),
+        radial-gradient(900px 600px at 90% 10%, rgba(30,136,229,.10), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+    }
+
+    /* Subtle felt noise (no external assets) */
+    body:before{
+      content:"";
+      position:fixed; inset:0;
+      pointer-events:none;
+      opacity:.06;
+      background-image:
+        repeating-linear-gradient(0deg, rgba(255,255,255,.06) 0 1px, transparent 1px 3px),
+        repeating-linear-gradient(90deg, rgba(0,0,0,.08) 0 1px, transparent 1px 4px);
+      mix-blend-mode:overlay;
+    }
+
+    .wrap{
+      max-width:var(--wrap);
+      margin:0 auto;
+      padding:14px 14px 170px; /* room for dock + tabs */
+    }
+
+    h1{font-size:18px;margin:0;}
+    .subtitle{font-size:12px;color:var(--muted);}
+
+    /* Top app bar */
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:60;
+      background:rgba(4,26,20,.92);
+      backdrop-filter: blur(10px);
+      border-bottom:1px solid var(--border);
+    }
+    .topbar-inner{
+      max-width:var(--wrap);
+      margin:0 auto;
+      padding:12px 14px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .titleblock{display:flex;flex-direction:column;gap:6px;}
+    .top-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);
+      font-size:12px;
+    }
+    .badge b{font-size:12px;}
+
+    /* Cards / layout */
     .row{display:flex;gap:12px;flex-wrap:wrap;}
-    .card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:12px;}
+    .card{
+      background:linear-gradient(180deg, rgba(6,42,32,.95), rgba(5,34,24,.92));
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:12px;
+      box-shadow:0 10px 28px rgba(0,0,0,.18);
+    }
     .grow{flex:1 1 520px;}
     .small{flex:1 1 320px;}
+
     label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;}
-    select,button,input{font-size:14px;border-radius:12px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);color:var(--text);padding:10px 12px;}
+
+    select,button,input{
+      font-size:14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:10px 12px;
+      outline:none;
+    }
     select,input{width:100%;}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-    .btn{width:100%;padding:14px 12px;font-weight:800;}
-    .btn.good{border-color:rgba(66,211,146,.45);}
-    .btn.neutral{border-color:rgba(159,176,197,.35);}
-    .btn.primary{border-color:rgba(74,163,255,.55);}
-    .btn.ok{border-color:rgba(66,211,146,.55);}
-    .btn.danger{border-color:rgba(255,90,95,.55);}
-    .btn:disabled{opacity:.45;}
-    .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);}
-    .k{color:var(--muted);font-size:12px;}
-    .v{font-weight:900;}
-    .big{font-size:22px;font-weight:950;}
-    .muted{color:var(--muted);}
+    input::placeholder{color:rgba(234,244,239,.50);}
     .sep{height:1px;background:rgba(255,255,255,.08);margin:10px 0;}
-    .actions{display:flex;gap:10px;flex-wrap:wrap;}
+
+    /* Buttons */
+    .btn{
+      width:100%;
+      padding:14px 12px;
+      font-weight:950;
+      letter-spacing:.2px;
+      border-radius:18px;
+      transition:transform .06s ease, filter .12s ease, opacity .12s ease, background .12s ease;
+      box-shadow:0 10px 18px rgba(0,0,0,.16);
+    }
+    .btn:active{transform:scale(.99); filter:brightness(1.05);}
+    .btn:disabled{opacity:.45; box-shadow:none;}
+
+    /* Your app.js uses btn good/neutral/ok/danger/primary etc.
+       We keep them, but style them in the casino system: */
+    .btn.primary{
+      background:var(--primary);
+      color:var(--primaryText);
+      border-color:rgba(247,201,72,.55);
+    }
+    .btn.neutral{
+      background:rgba(255,255,255,.08);
+      border-color:rgba(255,255,255,.14);
+      color:var(--text);
+      box-shadow:none;
+    }
+    .btn.ok{
+      background:rgba(46,204,113,.14);
+      border-color:rgba(46,204,113,.55);
+      color:var(--text);
+    }
+    .btn.danger{
+      background:rgba(255,90,95,.16);
+      border-color:rgba(255,90,95,.55);
+      color:var(--text);
+    }
+
+    /* Pills / stats */
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);
+      box-shadow:0 10px 16px rgba(0,0,0,.12);
+    }
+    .k{color:var(--muted);font-size:12px;}
+    .v{font-weight:1000;}
+    .big{font-size:28px;font-weight:1100; letter-spacing:.2px;}
+    .muted{color:var(--muted);}
     .note{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.35;}
+
+    /* Toggle rows */
     .toggleRow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
     .toggle{display:flex;gap:8px;align-items:center;}
     input[type="checkbox"]{width:18px;height:18px;}
-    .log{max-height:360px;overflow:auto;border-radius:12px;border:1px solid rgba(255,255,255,.08);}
+
+    /* Selected outcome box */
+    .selectedBox{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      border:1px dashed rgba(255,255,255,.18);
+      border-radius:18px;
+      padding:10px 12px;
+      background:rgba(255,255,255,.03);
+    }
+    .selectedTag{font-weight:1000;}
+    .mini{font-size:12px;color:var(--muted);}
+
+    .actions{display:flex;gap:10px;flex-wrap:wrap;}
+    .actions .btn{width:auto; padding:10px 12px; box-shadow:none;}
+
+    /* Outcome buttons grid */
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+    @media (max-width:520px){ .grid{grid-template-columns:repeat(2,1fr);} }
+
+    /* Bankroll row fix */
+    .bankrollRow{display:flex;gap:10px;margin-top:8px;align-items:flex-end;}
+    .bankrollRow > div:first-child{flex:1;min-width:0;}
+    .bankrollRow > div:last-child{flex:0 0 110px;}
+    #applyBankrollBtn{width:100%;}
+
+    /* Log table */
+    .log{max-height:360px;overflow:auto;border-radius:16px;border:1px solid rgba(255,255,255,.10);}
     table{width:100%;border-collapse:collapse;font-size:12px;}
     th,td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left;white-space:nowrap;}
-    th{position:sticky;top:0;background:#0f1624;z-index:1;}
+    th{position:sticky;top:0;background:rgba(4,26,20,.92);backdrop-filter: blur(8px);z-index:1;}
     .right{text-align:right;}
-    .selectedBox{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px dashed rgba(255,255,255,.18);border-radius:14px;padding:10px 12px;}
-    .selectedTag{font-weight:900;}
-    .mini{font-size:12px;color:var(--muted);}
-    .infoBtn{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:999px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.04);color:var(--text);font-weight:900;cursor:pointer;user-select:none;}
-    .footerbar{position:fixed;left:0;right:0;bottom:0;background:rgba(11,15,20,.92);border-top:1px solid rgba(255,255,255,.08);padding:10px 14px;}
-    .footerbar .wrap{padding:0;}
-    /* modal */
-    .backdrop{position:fixed;inset:0;background:rgba(0,0,0,.58);display:none;align-items:center;justify-content:center;padding:18px;z-index:9999;}
-    .modal{width:min(560px,100%);background:#0f1624;border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:14px;}
+
+    /* Mobile log cards (mirrors table) */
+    .logCards{display:none; flex-direction:column; gap:10px;}
+    .logCard{
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+      border-radius:18px;
+      padding:10px 12px;
+    }
+    .logCardTop{display:flex; justify-content:space-between; gap:10px; align-items:center;}
+    .logCardTop .title{font-weight:1000;}
+    .logCardGrid{display:grid; grid-template-columns:1fr 1fr; gap:6px 10px; margin-top:8px; font-size:12px; color:var(--muted);}
+    .logCardGrid b{color:var(--text); font-weight:950;}
+    @media (max-width:760px){
+      .log{display:none;}
+      .logCards{display:flex;}
+    }
+
+    /* Tabs (bottom) */
+    .tabbar{
+      position:fixed; left:0; right:0; bottom:0;
+      z-index:90;
+      background:rgba(4,26,20,.94);
+      backdrop-filter: blur(10px);
+      border-top:1px solid rgba(255,255,255,.10);
+      padding:10px 10px calc(10px + env(safe-area-inset-bottom));
+    }
+    .tabbar-inner{
+      max-width:var(--wrap);
+      margin:0 auto;
+      display:flex;
+      gap:10px;
+    }
+    .tabbtn{
+      flex:1;
+      border-radius:18px;
+      padding:10px 12px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      font-weight:1000;
+      box-shadow:none;
+    }
+    .tabbtn.active{
+      background:rgba(247,201,72,.18);
+      border-color:rgba(247,201,72,.45);
+      color:var(--text);
+    }
+
+    /* Sticky Game HUD (Play view) */
+    .gameHud{
+      position:sticky;
+      top:64px; /* under topbar */
+      z-index:70;
+      margin-top:12px;
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(6,42,32,.86);
+      backdrop-filter: blur(10px);
+      box-shadow:var(--shadow);
+      padding:10px 12px;
+    }
+    .hudRow{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;}
+    .hudLeft{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+    .hudRight{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+    .hudPill{padding:7px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);}
+
+    /* Sticky Play actions (Clear/Submit/Undo) */
+    .playActions{
+      position:fixed;
+      left:0; right:0;
+      bottom:68px; /* above tabbar */
+      z-index:85;
+      padding:10px 10px;
+      pointer-events:none;
+    }
+    .playActions-inner{
+      max-width:var(--wrap);
+      margin:0 auto;
+      display:flex;
+      gap:10px;
+      pointer-events:auto;
+    }
+    .playActions-inner button{
+      flex:1;
+      padding:12px 12px;
+      border-radius:20px;
+      box-shadow:0 12px 22px rgba(0,0,0,.20);
+    }
+
+    /* Info button */
+    .infoBtn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:22px;
+      height:22px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      font-weight:1000;
+      cursor:pointer;
+      user-select:none;
+    }
+
+    /* Modals */
+    .backdrop{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,.62);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      z-index:9999;
+    }
+    .modal{
+      width:min(820px,100%);
+      background:linear-gradient(180deg, rgba(6,42,32,.96), rgba(4,26,20,.96));
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:20px;
+      padding:14px;
+      box-shadow:0 22px 70px rgba(0,0,0,.45);
+      max-height:min(82vh,760px);
+      overflow:auto;
+    }
     .modal h2{margin:0 0 8px;font-size:16px;}
     .modal .content{font-size:14px;line-height:1.45;color:var(--text);}
     .modal .content .muted{color:var(--muted);}
     .modal .btnrow{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:12px;}
     .modal .btnrow button{min-width:140px;}
 
-    /* topbar + update bar */
-    .topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 10px;}
-    .titleblock{display:flex;flex-direction:column;gap:6px;}
-    .subtitle{font-size:12px;color:var(--muted);}
-    .top-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
-    .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03);font-size:12px;}
-    .badge b{font-size:12px;}
-    .updatebar{display:none;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:10px 0 12px;padding:10px 12px;border-radius:14px;border:1px solid rgba(74,163,255,.35);background:rgba(74,163,255,.08);}
+    /* Update bar */
+    .updatebar{
+      display:none;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      margin:10px 0 12px;
+      padding:10px 12px;
+      border-radius:18px;
+      border:1px solid rgba(247,201,72,.35);
+      background:rgba(247,201,72,.12);
+      box-shadow:0 10px 24px rgba(0,0,0,.16);
+    }
     .updatebar strong{font-size:13px;}
-    /* bankroll row fix (prevents overlap) */
-    .bankrollRow{display:flex;gap:10px;margin-top:8px;align-items:flex-end;}
-    .bankrollRow > div:first-child{flex:1;min-width:0;}
-    .bankrollRow > div:last-child{flex:0 0 110px;}
-    #applyBankrollBtn{width:100%;}
+
+    /* Views */
+    .view{display:none;}
+    .view.active{display:block;}
+
+    /* Outcome styling (applied via JS: semantic classes on each outcome button) */
+    #buttons button{
+      border-radius:20px;
+      font-weight:1000;
+      min-height:56px;
+    }
+    #buttons button.outcome{
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow:0 14px 26px rgba(0,0,0,.22);
+      position:relative;
+      overflow:hidden;
+    }
+    #buttons button.outcome:before{
+      content:"";
+      position:absolute; inset:-40% -20% auto -20%;
+      height:120%;
+      background:linear-gradient(180deg, rgba(255,255,255,.16), transparent 55%);
+      transform:rotate(8deg);
+      opacity:.65;
+      pointer-events:none;
+    }
+    #buttons button.outcome.red{background:var(--rouletteRed);}
+    #buttons button.outcome.black{background:var(--rouletteBlack); border-color:rgba(255,255,255,.24);}
+    #buttons button.outcome.green{background:var(--rouletteGreen);}
+
+    #buttons button.outcome.player{background:var(--playerBlue);}
+    #buttons button.outcome.banker{background:var(--bankerRed);}
+    #buttons button.outcome.tie{background:var(--tieGreen);}
+
+    /* If any non-outcome button ever appears in #buttons, keep it neutral */
+    #buttons button:not(.outcome){
+      background:rgba(255,255,255,.09);
+      border-color:rgba(255,255,255,.14);
+      box-shadow:none;
+    }
   </style>
 </head>
 
 <body>
-<div class="wrap">
 
-  <div class="topbar">
+<!-- Top App Bar -->
+<div class="topbar">
+  <div class="topbar-inner">
     <div class="titleblock">
       <h1 id="appTitle">Adaptive Phase Progression Betting System</h1>
-      <div class="subtitle">Staged input • Auto decisions • CSV export • Optional bankroll manager</div>
+      <div class="subtitle">Classic Casino • Simple play • Sticky bankroll • Log + Export</div>
     </div>
 
     <div class="top-actions">
       <span class="badge">Version <b id="versionBadge">—</b></span>
-      <button id="openStrategyBtn" class="btn" type="button" style="padding:6px 10px; font-size:12px;">
-  Learn Strategy
-</button>
-      <button class="btn primary" id="installBtn" style="display:none; padding:10px 12px; width:auto;">Install APP Betting</button>
+
+      <button id="openStrategyBtn" class="btn neutral" type="button" style="padding:8px 12px; width:auto;">
+        Learn Strategy
+      </button>
+
+      <button id="openHelpBtn" class="btn neutral" type="button" style="padding:8px 12px; width:auto;">
+        Rules / Help
+      </button>
+
+      <button class="btn primary" id="installBtn" style="display:none; padding:10px 12px; width:auto;">
+        Install APP Betting
+      </button>
     </div>
   </div>
+</div>
 
+<div class="wrap">
+
+  <!-- Update available -->
   <div class="updatebar" id="updateBar">
     <div>
       <strong>Update available</strong>
@@ -111,172 +464,265 @@
     </div>
     <div class="top-actions">
       <button class="btn primary" id="refreshBtn" style="padding:10px 12px; width:auto;">Refresh</button>
-      <button class="btn" id="dismissUpdateBtn" style="padding:10px 12px; width:auto;">Later</button>
+      <button class="btn neutral" id="dismissUpdateBtn" style="padding:10px 12px; width:auto;">Later</button>
     </div>
   </div>
 
-  <!-- YOUR APP UI (unchanged) -->
-  <div class="row">
-    <div class="card small">
-      <label>Game Type</label>
-      <select id="gameType">
-        <option value="roulette">American Roulette (R/B + Green)</option>
-        <option value="baccarat">Vegas Baccarat (Player/Banker + Tie)</option>
-      </select>
+  <!-- =========================
+       PLAY VIEW
+  ========================== -->
+  <section class="view active" id="viewPlay">
 
-      <div class="sep"></div>
-
-      <label>Series</label>
-      <select id="series">
-        <option value="A">Series A</option>
-        <option value="B">Series B</option>
-      </select>
-
-      <div class="sep"></div>
-
-      <label>Start Mode (used when Carry Mode is OFF)</label>
-      <select id="startMode">
-        <option value="SAME">SAME</option>
-        <option value="OPP">OPPOSITE</option>
-      </select>
-
-      <div class="sep"></div>
-
-      <div class="toggleRow">
-        <div class="toggle">
-          <input type="checkbox" id="autoSeries"/>
-          <label style="margin:0;display:flex;gap:8px;align-items:center;">
-            Auto Series
-            <span class="infoBtn" data-tip="autoSeries">i</span>
-          </label>
+    <!-- Sticky Game HUD (Bankroll + key stats always visible) -->
+    <div class="gameHud">
+      <div class="hudRow">
+        <div class="hudLeft">
+          <!-- app.js writes into these IDs -->
+          <span class="hudPill"><span class="k">BANKROLL</span> <span class="v" id="bankrollCurrent">—</span></span>
+          <span class="hudPill"><span class="k">SESSION NET</span> <span class="v" id="bankrollNet">—</span></span>
+          <span class="hudPill"><span class="k">GAME PnL</span> <span class="v" id="gamePnL">0</span></span>
         </div>
-        <div class="toggle">
-          <input type="checkbox" id="carryMode"/>
-          <label style="margin:0;display:flex;gap:8px;align-items:center;">
-            Carry Mode
-            <span class="infoBtn" data-tip="carryMode">i</span>
-          </label>
+        <div class="hudRight">
+          <span class="hudPill"><span class="k">SERIES</span> <span class="v" id="seriesShow">—</span></span>
+          <span class="hudPill"><span class="k">MODE</span> <span class="v" id="mode">—</span></span>
+          <span class="hudPill"><span class="k">STATE</span> <span class="v" id="state">NORMAL</span></span>
+          <span class="infoBtn" id="hudInfoBtn" title="Quick help">i</span>
         </div>
       </div>
-
-      <div class="sep"></div>
-
-      <label style="display:flex;justify-content:space-between;align-items:center;">
-        <span>Bankroll Manager</span>
-        <span class="infoBtn" data-tip="bankroll">i</span>
-      </label>
-      <div class="toggleRow">
-        <div class="toggle">
-          <input type="checkbox" id="bankrollOn"/>
-          <label style="margin:0;">Enable</label>
-        </div>
+      <div class="note" style="margin-top:8px;">
+        Tip: Use <b>Setup</b> for configuration. The Play screen stays clean during live hands/spins.
       </div>
-      <div class="bankrollRow">
-        <div style="flex:1 1 160px; min-width:0;">
-          <label>Starting Bankroll</label>
-          <input id="bankrollStart" inputmode="decimal" placeholder="e.g., 300"/>
-        </div>
-       <div style="flex:0 0 104px; display:flex; align-items:flex-end;">
-          <button class="btn primary" id="applyBankrollBtn" style="padding:10px 12px;">Apply</button>
-       </div>
-      </div>
-      <div class="note">
-        Current Bankroll: <b id="bankrollCurrent">—</b><br/>
-        Session Net: <b id="bankrollNet">—</b>
-      </div>
-
-      <div class="sep"></div>
-
-      <button class="btn primary" id="newGameBtn">New Game (observe 1 true outcome first)</button>
-      <button class="btn ok" id="newEveningBtn" style="margin-top:10px;">New Evening (clear log)</button>
     </div>
 
-    <div class="card grow">
-      <div class="row" style="align-items:center;">
-        <div class="pill"><span class="k">NEXT SIDE</span> <span class="v big" id="nextSide">—</span></div>
-        <div class="pill"><span class="k">NEXT BET</span> <span class="v big" id="nextBet">—</span></div>
-        <div class="pill"><span class="k">MODE</span> <span class="v" id="mode">—</span></div>
-        <div class="pill"><span class="k">MODE LOSSES</span> <span class="v" id="modeLosses">—</span></div>
-        <div class="pill"><span class="k">SERIES</span> <span class="v" id="seriesShow">—</span></div>
-        <div class="pill"><span class="k">GAME PnL</span> <span class="v big" id="gamePnL">0</span></div>
-      </div>
+    <div class="row" style="margin-top:12px;">
+      <div class="card grow">
 
-      <div class="sep"></div>
-
-      <div class="row" style="gap:10px;">
-        <div class="pill"><span class="k">STATE</span> <span class="v" id="state">NORMAL</span></div>
-        <div class="pill"><span class="k">CONSEC WINS (SAME)</span> <span class="v" id="cw">0</span></div>
-        <div class="pill"><span class="k">LADDER BET</span> <span class="v" id="ladderBet">—</span></div>
-        <div class="pill"><span class="k">SPLIT LEDGER</span> <span class="v" id="ledger">—</span></div>
-        <div class="pill"><span class="k">SPLIT PHASE</span> <span class="v" id="splitPhase">—</span></div>
-        <div class="pill"><span class="k">NEXT SPLIT BET</span> <span class="v" id="nextSplitBet">—</span></div>
-      </div>
-
-      <div class="sep"></div>
-
-      <div class="selectedBox">
-        <div>
-          <div class="mini">Selected Outcome (not submitted)</div>
-          <div class="selectedTag" id="selectedOutcome">—</div>
+        <!-- Primary callouts -->
+        <div class="row" style="align-items:center;">
+          <div class="pill"><span class="k">NEXT SIDE</span> <span class="v big" id="nextSide">—</span></div>
+          <div class="pill"><span class="k">NEXT BET</span> <span class="v big" id="nextBet">—</span></div>
+          <div class="pill"><span class="k">MODE LOSSES</span> <span class="v" id="modeLosses">—</span></div>
         </div>
-        <div class="actions">
-          <button class="btn" id="clearSelBtn" style="padding:10px 12px;">Clear</button>
-          <button class="btn primary" id="submitSelBtn" style="padding:10px 12px;">Submit</button>
-          <button class="btn ok" id="undoBtn" style="padding:10px 12px;">Undo</button>
-        </div>
-      </div>
 
-      <div class="sep"></div>
+        <div class="sep"></div>
 
-      <div class="grid" id="buttons"></div>
-      <div class="note" id="hint"></div>
-    </div>
-  </div>
+        <!-- Secondary state (keep IDs for app.js) -->
+        <div class="row" style="gap:10px;">
+          <div class="pill"><span class="k">CONSEC WINS (SAME)</span> <span class="v" id="cw">0</span></div>
+          <div class="pill"><span class="k">LADDER BET</span> <span class="v" id="ladderBet">—</span></div>
+          <div class="pill"><span class="k">SPLIT LEDGER</span> <span class="v" id="ledger">—</span></div>
+          <div class="pill"><span class="k">SPLIT PHASE</span> <span class="v" id="splitPhase">—</span></div>
+          <div class="pill"><span class="k">NEXT SPLIT BET</span> <span class="v" id="nextSplitBet">—</span></div>
+        </div>
 
-  <div class="row" style="margin-top:12px;">
-    <div class="card grow">
-      <div class="row" style="align-items:center; justify-content:space-between;">
-        <div>
-          <div class="muted" style="font-size:12px;">Session Log</div>
-          <div style="font-weight:900;">Rows: <span id="logCount">0</span> &nbsp; | &nbsp; Game#: <span id="gameNo">0</span></div>
+        <div class="sep"></div>
+
+        <!-- Selected outcome -->
+        <div class="selectedBox">
+          <div>
+            <div class="mini">Selected Outcome (not submitted)</div>
+            <div class="selectedTag" id="selectedOutcome">—</div>
+          </div>
+          <div class="actions" style="align-items:center;">
+            <!-- These IDs are used by app.js -->
+            <button class="btn neutral" id="clearSelBtn" style="padding:10px 12px;">Clear</button>
+            <button class="btn primary" id="submitSelBtn" style="padding:10px 12px;">Submit</button>
+            <button class="btn neutral" id="undoBtn" style="padding:10px 12px;">Undo</button>
+          </div>
         </div>
-        <div class="actions">
-          <button class="btn primary" id="exportCsvBtn" style="padding:10px 12px;">Export CSV</button>
-          <button class="btn danger" id="resetSessionBtn" style="padding:10px 12px;">Reset Session</button>
-        </div>
-      </div>
-      <div class="sep"></div>
-      <div class="log">
-        <table>
-          <thead>
-          <tr>
-            <th>#</th><th>Game#</th><th>Series</th><th>Type</th>
-            <th>Outcome</th><th>Pick</th><th class="right">Bet</th>
-            <th>Result</th><th class="right">ΔPnL</th><th class="right">GamePnL</th>
-            <th>Mode</th><th>State</th><th class="right">Ledger</th><th>Note</th>
-          </tr>
-          </thead>
-          <tbody id="logBody"></tbody>
-        </table>
+
+        <div class="sep"></div>
+
+        <!-- Outcome buttons rendered by app.js into #buttons -->
+        <div class="grid" id="buttons"></div>
+        <div class="note" id="hint"></div>
       </div>
     </div>
-  </div>
+
+    <!-- Sticky bottom actions for play (thumb reachable) -->
+    <div class="playActions" aria-hidden="false">
+      <div class="playActions-inner">
+        <button class="btn neutral" id="clearSelBtnDock" type="button">Clear</button>
+        <button class="btn primary" id="submitSelBtnDock" type="button">Submit</button>
+        <button class="btn neutral" id="undoBtnDock" type="button">Undo</button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- =========================
+       SETUP VIEW
+  ========================== -->
+  <section class="view" id="viewSetup">
+    <div class="row" style="margin-top:12px;">
+      <div class="card small">
+
+        <label>Game Type</label>
+        <select id="gameType">
+          <option value="roulette">American Roulette (R/B + Green)</option>
+          <option value="baccarat">Vegas Baccarat (Player/Banker + Tie)</option>
+        </select>
+
+        <div class="sep"></div>
+
+        <label>Series</label>
+        <select id="series">
+          <option value="A">Series A</option>
+          <option value="B">Series B</option>
+        </select>
+
+        <div class="sep"></div>
+
+        <label>Start Mode (used when Carry Mode is OFF)</label>
+        <select id="startMode">
+          <option value="SAME">SAME</option>
+          <option value="OPP">OPPOSITE</option>
+        </select>
+
+        <div class="sep"></div>
+
+        <div class="toggleRow">
+          <div class="toggle">
+            <input type="checkbox" id="autoSeries"/>
+            <label style="margin:0;display:flex;gap:8px;align-items:center;">
+              Auto Series
+              <span class="infoBtn" data-tip="autoSeries">i</span>
+            </label>
+          </div>
+          <div class="toggle">
+            <input type="checkbox" id="carryMode"/>
+            <label style="margin:0;display:flex;gap:8px;align-items:center;">
+              Carry Mode
+              <span class="infoBtn" data-tip="carryMode">i</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="sep"></div>
+
+        <label style="display:flex;justify-content:space-between;align-items:center;">
+          <span>Bankroll Manager</span>
+          <span class="infoBtn" data-tip="bankroll">i</span>
+        </label>
+        <div class="toggleRow">
+          <div class="toggle">
+            <input type="checkbox" id="bankrollOn"/>
+            <label style="margin:0;">Enable</label>
+          </div>
+        </div>
+
+        <div class="bankrollRow">
+          <div style="flex:1 1 160px; min-width:0;">
+            <label>Starting Bankroll</label>
+            <input id="bankrollStart" inputmode="decimal" placeholder="e.g., 300"/>
+          </div>
+          <div style="flex:0 0 104px; display:flex; align-items:flex-end;">
+            <button class="btn primary" id="applyBankrollBtn" style="padding:10px 12px;">Apply</button>
+          </div>
+        </div>
+
+        <!-- Mirror (read-only) for setup view (different IDs; we sync via JS) -->
+        <div class="note">
+          Current Bankroll: <b id="bankrollCurrentMirror">—</b><br/>
+          Session Net: <b id="bankrollNetMirror">—</b>
+        </div>
+
+        <div class="sep"></div>
+
+        <button class="btn primary" id="newGameBtn">New Game (observe 1 true outcome first)</button>
+        <button class="btn ok" id="newEveningBtn" style="margin-top:10px;">New Evening (clear log)</button>
+
+        <div class="sep"></div>
+
+        <button class="btn danger" id="resetSessionBtn">Reset Session</button>
+        <button class="btn neutral" id="exportCsvBtn" style="margin-top:10px;">Export CSV</button>
+      </div>
+
+      <div class="card grow">
+        <div class="row" style="align-items:center;">
+          <div class="pill"><span class="k">NEXT SIDE</span> <span class="v" id="nextSideSetup">—</span></div>
+          <div class="pill"><span class="k">NEXT BET</span> <span class="v" id="nextBetSetup">—</span></div>
+          <div class="pill"><span class="k">SERIES</span> <span class="v" id="seriesShowSetup">—</span></div>
+        </div>
+
+        <div class="sep"></div>
+
+        <div class="note">
+          This preview mirrors your live state so you can confirm settings before playing.
+        </div>
+
+        <div class="sep"></div>
+
+        <button class="btn neutral" id="openStrategyBtn2" type="button">Learn Strategy</button>
+        <button class="btn neutral" id="openHelpBtn2" type="button" style="margin-top:10px;">Rules / Help</button>
+
+        <div class="sep"></div>
+
+        <div class="note">
+          On mobile: Play = live table view. Setup = configuration. Log = readable history + export.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+       LOG VIEW
+  ========================== -->
+  <section class="view" id="viewLog">
+    <div class="row" style="margin-top:12px;">
+      <div class="card grow">
+        <div class="row" style="align-items:center; justify-content:space-between;">
+          <div>
+            <div class="muted" style="font-size:12px;">Session Log</div>
+            <div style="font-weight:1000;">Rows: <span id="logCount">0</span> &nbsp; | &nbsp; Game#: <span id="gameNo">0</span></div>
+          </div>
+          <div class="actions">
+            <button class="btn primary" id="exportCsvBtnLog" style="padding:10px 12px;">Export CSV</button>
+            <button class="btn danger" id="resetSessionBtnLog" style="padding:10px 12px;">Reset Session</button>
+          </div>
+        </div>
+
+        <div class="sep"></div>
+
+        <!-- Desktop table (app.js renders into #logBody) -->
+        <div class="log">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th><th>Game#</th><th>Series</th><th>Type</th>
+                <th>Outcome</th><th>Pick</th><th class="right">Bet</th>
+                <th>Result</th><th class="right">ΔPnL</th><th class="right">GamePnL</th>
+                <th>Mode</th><th>State</th><th class="right">Ledger</th><th>Note</th>
+              </tr>
+            </thead>
+            <tbody id="logBody"></tbody>
+          </table>
+        </div>
+
+        <!-- Mobile cards mirror -->
+        <div class="logCards" id="logCards"></div>
+
+        <div class="note" style="margin-top:10px;">
+          Mobile log uses cards for readability. CSV export still uses the same underlying data.
+        </div>
+      </div>
+    </div>
+  </section>
 
 </div>
 
-<div class="footerbar" id="footerBar">
-  <div class="wrap" style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
-    <div class="note">
-      Rules baked in: NORMAL capped (A:30, B:60). Split triggers only from NORMAL cap-loss (roulette: cap+green counts). Split freezes ladder. Tie during split = push (repeat same split bet). TP ends immediately in SPLIT; TP ends at streak loss in STREAK.
-    </div>
-    <button id="closeFooterBtn" style="background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;">✕</button>
+<!-- Bottom tab bar -->
+<nav class="tabbar" aria-label="Primary navigation">
+  <div class="tabbar-inner">
+    <button class="tabbtn active" id="tabPlay" type="button">Play</button>
+    <button class="tabbtn" id="tabSetup" type="button">Setup</button>
+    <button class="tabbtn" id="tabLog" type="button">Log</button>
   </div>
-</div>
-</div>
+</nav>
 
-<!-- Tooltip Modal -->
+<!-- Tooltip Modal (app.js expects these IDs) -->
 <div class="backdrop" id="tipBackdrop" role="dialog" aria-modal="true">
-  <div class="modal">
+  <div class="modal" style="width:min(560px,100%);">
     <h2 id="tipTitle">Info</h2>
     <div class="content" id="tipBody"></div>
     <div class="btnrow">
@@ -285,29 +731,30 @@
   </div>
 </div>
 
-<!-- End Game Modal -->
+<!-- End Game Modal (app.js expects these IDs) -->
 <div class="backdrop" id="endBackdrop" role="dialog" aria-modal="true">
-  <div class="modal">
+  <div class="modal" style="width:min(560px,100%);">
     <h2 id="endTitle">Game Ended</h2>
     <div class="content" id="endBody"></div>
     <div class="btnrow">
       <button class="btn primary" id="nextGameFromModalBtn">Start Next Game</button>
-      <button class="btn" id="closeEndBtn">Close</button>
+      <button class="btn neutral" id="closeEndBtn">Close</button>
     </div>
   </div>
 </div>
 
 <!-- Strategy Modal -->
 <div class="backdrop" id="strategyBackdrop" role="dialog" aria-modal="true" aria-labelledby="strategyTitle" style="display:none;">
-  <div class="modal" style="width:min(820px,100%); max-height:min(78vh,720px); overflow:auto;">
+  <div class="modal">
     <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
       <h2 id="strategyTitle" style="margin:0;">Adaptive Phase Progression (APP)</h2>
-      <button id="closeStrategyBtn" class="btn" type="button" style="padding:8px 12px;">Close</button>
+      <button id="closeStrategyBtn" class="btn neutral" type="button" style="padding:8px 12px; width:auto;">Close</button>
     </div>
 
     <div class="sep"></div>
 
     <div class="content" id="strategyBody" style="font-size:14px; line-height:1.5;">
+      <!-- Keep your existing strategy content -->
       <p class="muted" style="margin-top:0;">
         This page explains exactly what the tracker is doing. It is a reference for the rules, states, and edge cases.
       </p>
@@ -355,30 +802,28 @@
         <li><b>TP handling:</b> if TP is reached during a streak, the game ends when the streak ends (on the streak loss)</li>
       </ul>
 
-<h3 style="margin:14px 0 8px;">SPLIT Phase (Ledger Recovery)</h3>
-<ul style="margin:0 0 10px; padding-left:18px;">
-  <li><b>Trigger:</b> only from a <b>NORMAL</b> loss when the placed bet was the cap</li>
-  <li><b>Ledger start:</b> $60 (A) or $120 (B)</li>
-  <li><b>Probe:</b> bet minimum ($5 A / $10 B). Loss → add probe to ledger and probe again. Win → subtract probe and move to paydown.</li>
-  <li>
-    <b>Paydown:</b> After a winning probe, divide the current ledger in half and round up. 
-    Bet that amount first.
-    <ul style="margin:6px 0 0; padding-left:18px;">
-      <li><b>If it wins:</b> bet the remaining balance to fully clear the ledger.</li>
-      <li><b>If either paydown bet loses:</b> add that amount back to the ledger and return to the minimum probe bet.</li>
-    </ul>
-  </li>
-  <li><b>Max paydown bet:</b> capped at 18× base ($90 A / $180 B)</li>
-  <li><b>Exit:</b> when the split ledger reaches 0, split ends; app returns to NORMAL at the split-clear anchor (e.g., $15 in A / $30 in B)</li>
-  <li><b>Ladder freeze:</b> while SPLIT is active, the NORMAL ladder bet does not update</li>
-  <li><b>TP handling:</b> TP ends the game immediately during split</li>
-  <li><b>Ties in split (baccarat):</b> push; ledger unchanged; repeat same split bet</li>
-</ul>
+      <h3 style="margin:14px 0 8px;">SPLIT Phase (Ledger Recovery)</h3>
+      <ul style="margin:0 0 10px; padding-left:18px;">
+        <li><b>Trigger:</b> only from a <b>NORMAL</b> loss when the placed bet was the cap</li>
+        <li><b>Ledger start:</b> $60 (A) or $120 (B)</li>
+        <li><b>Probe:</b> bet minimum ($5 A / $10 B). Loss → add probe to ledger and probe again. Win → subtract probe and move to paydown.</li>
+        <li><b>Paydown:</b> After a winning probe, divide the current ledger in half and round up. Bet that amount first.
+          <ul style="margin:6px 0 0; padding-left:18px;">
+            <li><b>If it wins:</b> bet the remaining balance to fully clear the ledger.</li>
+            <li><b>If either paydown bet loses:</b> add that amount back to the ledger and return to the minimum probe bet.</li>
+          </ul>
+        </li>
+        <li><b>Max paydown bet:</b> capped at 18× base ($90 A / $180 B)</li>
+        <li><b>Exit:</b> when the split ledger reaches 0, split ends; app returns to NORMAL at the split-clear anchor (e.g., $15 in A / $30 in B)</li>
+        <li><b>Ladder freeze:</b> while SPLIT is active, the NORMAL ladder bet does not update</li>
+        <li><b>TP handling:</b> TP ends the game immediately during split</li>
+        <li><b>Ties in split (baccarat):</b> push; ledger unchanged; repeat same split bet</li>
+      </ul>
 
       <h3 style="margin:14px 0 8px;">Game End</h3>
       <ul style="margin:0 0 10px; padding-left:18px;">
         <li>TP or SL triggers an end-game popup and the game stops</li>
-        <li>The recommended Day PnL is +$80 or -$100</li>
+        <li>The recommended Day PnL is +$80 or -$300</li>
         <li>Bankroll Manager (if enabled) updates bankroll only when a game ends</li>
       </ul>
 
@@ -390,16 +835,54 @@
 
     <div class="sep"></div>
 
-    <div class="btnrow" style="display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;">
+    <div class="btnrow">
       <button id="copyStrategyBtn" class="btn primary" type="button">Copy Strategy Text</button>
-      <button id="closeStrategyBtn2" class="btn" type="button">Close</button>
+      <button id="closeStrategyBtn2" class="btn neutral" type="button">Close</button>
     </div>
   </div>
 </div>
 
-<!-- What's New Modal -->
+<!-- Help / Rules Modal -->
+<div class="backdrop" id="helpBackdrop" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <div class="modal" style="width:min(720px,100%);">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+      <h2 id="helpTitle" style="margin:0;">Rules / Quick Help</h2>
+      <button id="closeHelpBtn" class="btn neutral" type="button" style="padding:8px 12px; width:auto;">Close</button>
+    </div>
+    <div class="sep"></div>
+
+    <div class="content">
+      <p class="muted" style="margin-top:0;">
+        Quick reminders for live play. Full details are in <b>Learn Strategy</b>.
+      </p>
+      <ul style="margin:0 0 10px; padding-left:18px;">
+        <li><b>NORMAL capped:</b> A:30, B:60. Split triggers only from NORMAL cap-loss (roulette: cap+green counts).</li>
+        <li><b>SPLIT:</b> freezes ladder. Tie during split = push (repeat same split bet).</li>
+        <li><b>TP:</b> ends immediately in SPLIT; ends at streak loss in STREAK.</li>
+        <li><b>Bankroll Manager:</b> updates bankroll only when a game ends.</li>
+      </ul>
+
+      <div class="sep"></div>
+      <p class="muted" style="margin:0;">
+        Safety: Some venues don’t allow phone use at tables. Practice beforehand.
+      </p>
+
+      <div class="sep"></div>
+      <div class="note">
+        Version: <b id="versionBadgeFooter">—</b>
+      </div>
+    </div>
+
+    <div class="btnrow">
+      <button class="btn primary" id="helpOpenStrategyBtn" type="button">Open Strategy</button>
+      <button class="btn neutral" id="helpCloseBtn2" type="button">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- What's New Modal (app.js expects these IDs) -->
 <div class="backdrop" id="whatsNewBackdrop" role="dialog" aria-modal="true">
-  <div class="modal">
+  <div class="modal" style="width:min(560px,100%);">
     <h2 id="whatsNewTitle">What’s New</h2>
     <div class="content" id="whatsNewBody"></div>
     <div class="btnrow">
@@ -408,38 +891,101 @@
   </div>
 </div>
 
-<!-- App logic moved here -->
+<!-- Load your app logic -->
 <script src="/app.js"></script>
 
-  <script>
+<script>
+/* ----------------------------------------------------
+   UI Shell: Tabs + Dock buttons + Mirrors (safe with app.js)
+----------------------------------------------------- */
+document.addEventListener("DOMContentLoaded", () => {
+  const viewPlay = document.getElementById("viewPlay");
+  const viewSetup = document.getElementById("viewSetup");
+  const viewLog = document.getElementById("viewLog");
+
+  const tabPlay = document.getElementById("tabPlay");
+  const tabSetup = document.getElementById("tabSetup");
+  const tabLog = document.getElementById("tabLog");
+
+  function setActive(tab) {
+    [tabPlay, tabSetup, tabLog].forEach(b => b.classList.remove("active"));
+    [viewPlay, viewSetup, viewLog].forEach(v => v.classList.remove("active"));
+
+    if (tab === "play") { tabPlay.classList.add("active"); viewPlay.classList.add("active"); }
+    if (tab === "setup") { tabSetup.classList.add("active"); viewSetup.classList.add("active"); }
+    if (tab === "log") { tabLog.classList.add("active"); viewLog.classList.add("active"); }
+
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }
+
+  tabPlay.addEventListener("click", () => setActive("play"));
+  tabSetup.addEventListener("click", () => setActive("setup"));
+  tabLog.addEventListener("click", () => setActive("log"));
+
+  // Dock buttons proxy to your existing buttons (so app.js logic runs)
+  const proxy = (fromId, toId) => {
+    const from = document.getElementById(fromId);
+    const to = document.getElementById(toId);
+    if (!from || !to) return;
+    from.addEventListener("click", () => to.click());
+  };
+  proxy("clearSelBtnDock", "clearSelBtn");
+  proxy("submitSelBtnDock", "submitSelBtn");
+  proxy("undoBtnDock", "undoBtn");
+
+  // Log view buttons proxy to app.js ids (since ids must be unique)
+  const exportMain = document.getElementById("exportCsvBtn");
+  const resetMain = document.getElementById("resetSessionBtn");
+  const exportLog = document.getElementById("exportCsvBtnLog");
+  const resetLog = document.getElementById("resetSessionBtnLog");
+  if (exportMain && exportLog) exportLog.addEventListener("click", () => exportMain.click());
+  if (resetMain && resetLog) resetLog.addEventListener("click", () => resetMain.click());
+
+  // Mirror HUD values into Setup preview (different IDs)
+  const mirrorText = (srcId, mirrorId) => {
+    const src = document.getElementById(srcId);
+    const dst = document.getElementById(mirrorId);
+    if (!src || !dst) return;
+    const obs = new MutationObserver(() => dst.textContent = src.textContent);
+    obs.observe(src, { childList: true, subtree: true, characterData: true });
+    dst.textContent = src.textContent;
+  };
+  mirrorText("bankrollCurrent", "bankrollCurrentMirror");
+  mirrorText("bankrollNet", "bankrollNetMirror");
+  mirrorText("nextSide", "nextSideSetup");
+  mirrorText("nextBet", "nextBetSetup");
+  mirrorText("seriesShow", "seriesShowSetup");
+});
+</script>
+
+<script>
+/* ----------------------------------------------------
+   Strategy modal wiring (matches your original behavior)
+----------------------------------------------------- */
 document.addEventListener("DOMContentLoaded", () => {
   const openBtn = document.getElementById("openStrategyBtn");
+  const openBtn2 = document.getElementById("openStrategyBtn2");
   const back = document.getElementById("strategyBackdrop");
   const close1 = document.getElementById("closeStrategyBtn");
   const close2 = document.getElementById("closeStrategyBtn2");
   const copyBtn = document.getElementById("copyStrategyBtn");
   const bodyEl = document.getElementById("strategyBody");
 
-  if (!openBtn || !back) return;
+  if (!back) return;
 
   function openStrategy(){ back.style.display = "flex"; }
   function closeStrategy(){ back.style.display = "none"; }
 
-  openBtn.addEventListener("click", openStrategy);
+  if (openBtn) openBtn.addEventListener("click", openStrategy);
+  if (openBtn2) openBtn2.addEventListener("click", openStrategy);
   if (close1) close1.addEventListener("click", closeStrategy);
   if (close2) close2.addEventListener("click", closeStrategy);
 
-  // click outside modal closes
-  back.addEventListener("click", (e) => {
-    if (e.target === back) closeStrategy();
-  });
-
-  // escape closes
+  back.addEventListener("click", (e) => { if (e.target === back) closeStrategy(); });
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && back.style.display === "flex") closeStrategy();
   });
 
-  // Copy (plain text)
   if (copyBtn) {
     copyBtn.addEventListener("click", async () => {
       try{
@@ -456,15 +1002,136 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-  const closeBtn = document.getElementById("closeFooterBtn");
-  const footer = document.getElementById("footerBar");
+/* ----------------------------------------------------
+   Help modal (replaces old footer rules wall)
+----------------------------------------------------- */
+document.addEventListener("DOMContentLoaded", () => {
+  const back = document.getElementById("helpBackdrop");
+  const open = document.getElementById("openHelpBtn");
+  const open2 = document.getElementById("openHelpBtn2");
+  const hudInfo = document.getElementById("hudInfoBtn");
+  const close = document.getElementById("closeHelpBtn");
+  const close2 = document.getElementById("helpCloseBtn2");
+  const openStrategyFromHelp = document.getElementById("helpOpenStrategyBtn");
+  const strategyOpen = document.getElementById("openStrategyBtn");
 
-  if (closeBtn && footer) {
-    closeBtn.addEventListener("click", function () {
-      footer.style.display = "none";
+  if (!back) return;
+
+  const openHelp = () => back.style.display = "flex";
+  const closeHelp = () => back.style.display = "none";
+
+  if (open) open.addEventListener("click", openHelp);
+  if (open2) open2.addEventListener("click", openHelp);
+  if (hudInfo) hudInfo.addEventListener("click", openHelp);
+  if (close) close.addEventListener("click", closeHelp);
+  if (close2) close2.addEventListener("click", closeHelp);
+
+  back.addEventListener("click", (e) => { if (e.target === back) closeHelp(); });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && back.style.display === "flex") closeHelp();
+  });
+
+  if (openStrategyFromHelp && strategyOpen) {
+    openStrategyFromHelp.addEventListener("click", () => {
+      closeHelp();
+      strategyOpen.click();
     });
   }
+});
+</script>
+
+<script>
+/* ----------------------------------------------------
+   Outcome button coloring (works with your app.js renderButtons)
+   - app.js sets textContent: "RED", "BLACK", "GREEN (0/00)" or "PLAYER", "BANKER", "TIE"
+   - We add semantic classes after render/re-render.
+----------------------------------------------------- */
+document.addEventListener("DOMContentLoaded", () => {
+  const buttonsWrap = document.getElementById("buttons");
+  const gameTypeSel = document.getElementById("gameType");
+  if (!buttonsWrap) return;
+
+  function normalize(s){
+    return (s || "").trim().toUpperCase().replace(/\s+/g," ");
+  }
+
+  function applyOutcomeClasses(){
+    const game = gameTypeSel ? gameTypeSel.value : "roulette";
+    const btns = buttonsWrap.querySelectorAll("button");
+
+    btns.forEach(b => {
+      b.classList.remove("outcome","red","black","green","player","banker","tie");
+
+      const t = normalize(b.textContent);
+
+      if (game === "roulette") {
+        if (t === "RED" || t.startsWith("RED")) { b.classList.add("outcome","red"); return; }
+        if (t === "BLACK" || t.startsWith("BLACK")) { b.classList.add("outcome","black"); return; }
+        if (t.includes("GREEN") || t === "0" || t === "00") { b.classList.add("outcome","green"); return; }
+      }
+
+      if (game === "baccarat") {
+        if (t.startsWith("PLAYER")) { b.classList.add("outcome","player"); return; }
+        if (t.startsWith("BANKER")) { b.classList.add("outcome","banker"); return; }
+        if (t.includes("TIE")) { b.classList.add("outcome","tie"); return; }
+      }
+    });
+  }
+
+  const obs = new MutationObserver(applyOutcomeClasses);
+  obs.observe(buttonsWrap, { childList:true, subtree:true, characterData:true });
+
+  if (gameTypeSel) gameTypeSel.addEventListener("change", () => {
+    setTimeout(applyOutcomeClasses, 0);
+  });
+
+  applyOutcomeClasses();
+});
+</script>
+
+<script>
+/* ----------------------------------------------------
+   Mobile Log Cards (mirrors the table your app.js renders)
+----------------------------------------------------- */
+document.addEventListener("DOMContentLoaded", () => {
+  const tbody = document.getElementById("logBody");
+  const cards = document.getElementById("logCards");
+  if (!tbody || !cards) return;
+
+  function rebuildCards(){
+    cards.innerHTML = "";
+    const rows = Array.from(tbody.querySelectorAll("tr"));
+    for (const tr of rows.slice().reverse()) { // newest first
+      const tds = Array.from(tr.querySelectorAll("td")).map(td => td.textContent.trim());
+      if (tds.length < 14) continue;
+
+      const el = document.createElement("div");
+      el.className = "logCard";
+      el.innerHTML = `
+        <div class="logCardTop">
+          <div class="title">#${tds[0]} • Game ${tds[1]} • ${tds[2]}</div>
+          <div style="font-weight:1000;">${tds[9]}</div>
+        </div>
+        <div class="logCardGrid">
+          <div>Type: <b>${tds[3]}</b></div>
+          <div>Outcome: <b>${tds[4]}</b></div>
+          <div>Pick: <b>${tds[5]}</b></div>
+          <div>Bet: <b>${tds[6]}</b></div>
+          <div>Result: <b>${tds[7]}</b></div>
+          <div>ΔPnL: <b>${tds[8]}</b></div>
+          <div>Mode: <b>${tds[10]}</b></div>
+          <div>State: <b>${tds[11]}</b></div>
+          <div>Ledger: <b>${tds[12]}</b></div>
+          <div>Note: <b>${tds[13] || "—"}</b></div>
+        </div>
+      `;
+      cards.appendChild(el);
+    }
+  }
+
+  const obs = new MutationObserver(rebuildCards);
+  obs.observe(tbody, { childList:true, subtree:true, characterData:true });
+  rebuildCards();
 });
 </script>
 
