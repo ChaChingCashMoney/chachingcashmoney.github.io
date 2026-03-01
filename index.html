@@ -761,7 +761,7 @@ body.show-advanced [data-adv="inlineflex"]{
       <div class="card grow">
 
         <div class="row" style="align-items:center;">
-          <div class="pill"><span class="k">NEXT SIDE</span> <span class="v big" id="nextSide">—</span></div>
+          <div class="pill" id="nextSidePill"><span class="k">NEXT SIDE</span> <span class="v big" id="nextSide">—</span></div>
           <div class="pill" id="nextBetPill"><span class="k">NEXT BET</span> <span class="v big" id="nextBet">—</span></div>
           <div class="pill" data-adv="inlineflex"><span class="k">MODE LOSSES</span> <span class="v" id="modeLosses">—</span></div>
         </div>
@@ -1374,6 +1374,31 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   applyOutcomeClasses();
+
+  // NEXT SIDE dynamic color matching
+const nextSideEl = document.getElementById("nextSide");
+const nextSidePill = document.getElementById("nextSidePill");
+
+function applyNextSideColor(){
+  if (!nextSideEl || !nextSidePill) return;
+
+  const t = normalize(nextSideEl.textContent);
+
+  nextSidePill.classList.remove("red","black","green","player","banker","tie");
+
+  if (t === "RED") nextSidePill.classList.add("red");
+  else if (t === "BLACK") nextSidePill.classList.add("black");
+  else if (t.includes("GREEN")) nextSidePill.classList.add("green");
+  else if (t === "PLAYER") nextSidePill.classList.add("player");
+  else if (t === "BANKER") nextSidePill.classList.add("banker");
+  else if (t.includes("TIE")) nextSidePill.classList.add("tie");
+}
+
+if (nextSideEl){
+  const obsSide = new MutationObserver(applyNextSideColor);
+  obsSide.observe(nextSideEl, { childList:true, subtree:true, characterData:true });
+  applyNextSideColor();
+}
 });
 </script>
 
