@@ -1,7 +1,13 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-const APP_VERSION = "2.0.0";
+const APP_VERSION = "2.0.1";
 const RELEASE_NOTES = {
+  "2.0.1": [
+  "Added full in-app Changelog viewer (Help → View Changelog).",
+  "Changelog automatically renders from RELEASE_NOTES in app.js.",
+  "Current version visually marked within history.",
+  "Improved transparency and release documentation."
+],
   "2.0.0": [
   "Major UI overhaul: new Classic Casino felt theme.",
   "Split app into Play / Setup / Log tab views.",
