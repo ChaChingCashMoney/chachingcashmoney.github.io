@@ -37,6 +37,11 @@ const RELEASE_NOTES = {
     "APP Tracker core functionality (log, CSV export, bankroll manager)."
   ]
 };
+
+  // Expose release data for UI (changelog modal)
+window.APP_VERSION = APP_VERSION;
+window.APP_RELEASE_NOTES = RELEASE_NOTES;
+  
 function escapeHtml(s){
   return String(s)
     .replaceAll("&","&amp;")
