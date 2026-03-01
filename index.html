@@ -310,6 +310,17 @@
     .hudRight{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
     .hudPill{padding:7px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);}
 
+    /* Next Bet styling */
+#nextBetPill{
+  background: rgba(46,204,113,.18);
+  border: 1px solid rgba(46,204,113,.55);
+}
+
+#nextBetPill .v::before{
+  content: "$";
+  margin-right: 4px;
+}
+
     /* Info button */
     .infoBtn{
       display:inline-flex;
@@ -734,7 +745,7 @@ body.show-advanced [data-adv="inlineflex"]{
 
         <div class="row" style="align-items:center;">
           <div class="pill"><span class="k">NEXT SIDE</span> <span class="v big" id="nextSide">—</span></div>
-          <div class="pill"><span class="k">NEXT BET</span> <span class="v big" id="nextBet">—</span></div>
+          <div class="pill" id="nextBetPill"><span class="k">NEXT BET</span> <span class="v big" id="nextBet">—</span></div>
           <div class="pill" data-adv="inlineflex"><span class="k">MODE LOSSES</span> <span class="v" id="modeLosses">—</span></div>
         </div>
 
