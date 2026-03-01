@@ -343,6 +343,71 @@
     .modal .btnrow{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:12px;}
     .modal .btnrow button{min-width:140px;}
 
+    /* Changelog (casino aesthetic) */
+.changelogHeader{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+  margin-bottom:12px;
+}
+.changelogChip{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid rgba(247,201,72,.28);
+  background:rgba(247,201,72,.10);
+  box-shadow:0 10px 18px rgba(0,0,0,.12);
+  font-size:12px;
+}
+.changelogList{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.changelogVersion{
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.04);
+  border-radius:18px;
+  padding:10px 12px;
+  position:relative;
+  overflow:hidden;
+}
+.changelogVersion:before{
+  content:"";
+  position:absolute;
+  left:0; top:0; bottom:0;
+  width:4px;
+  background:linear-gradient(180deg, rgba(247,201,72,.95), rgba(247,201,72,.25));
+}
+.changelogTop{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.changelogTop .ver{
+  font-weight:1100;
+  letter-spacing:.2px;
+}
+.changelogTop .tag{
+  font-size:12px;
+  color:var(--muted);
+}
+.changelogNotes{
+  margin:8px 0 0;
+  padding-left:18px;
+  color:var(--muted);
+}
+.changelogNotes li{
+  margin:6px 0;
+}
+.changelogNotes b{
+  color:var(--text);
+}
     /* Update bar */
     .updatebar{
       display:none;
@@ -840,6 +905,7 @@
     </div>
 
     <div class="btnrow">
+      <button class="btn neutral" id="openChangelogBtn" type="button">View Changelog</button>
       <button class="btn primary" id="helpOpenStrategyBtn" type="button">Open Strategy</button>
       <button class="btn neutral" id="helpCloseBtn2" type="button">Close</button>
     </div>
@@ -853,6 +919,31 @@
     <div class="content" id="whatsNewBody"></div>
     <div class="btnrow">
       <button class="btn primary" id="whatsNewCloseBtn">Close</button>
+    </div>
+  </div>
+</div>
+
+  <!-- Full Changelog Modal -->
+<div class="backdrop" id="changelogBackdrop" role="dialog" aria-modal="true" aria-labelledby="changelogTitle">
+  <div class="modal" style="width:min(760px,100%);">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+      <h2 id="changelogTitle" style="margin:0;">Changelog</h2>
+      <button id="closeChangelogX" class="btn neutral" type="button" style="padding:8px 12px; width:auto;">Close</button>
+    </div>
+
+    <div class="sep"></div>
+
+    <div class="content">
+      <div class="changelogHeader">
+        <span class="changelogChip">Current: <b id="changelogCurrentVersion">—</b></span>
+        <span class="changelogChip muted">All release notes from app.js</span>
+      </div>
+
+      <div id="changelogBody" class="changelogList"></div>
+    </div>
+
+    <div class="btnrow">
+      <button class="btn primary" id="closeChangelogBtn" type="button">Close</button>
     </div>
   </div>
 </div>
@@ -993,6 +1084,88 @@ document.addEventListener("DOMContentLoaded", () => {
       strategyOpen.click();
     });
   }
+});
+</script>
+
+<script>
+/* ----------------------------------------------------
+   Changelog Modal (reads notes exposed by app.js)
+----------------------------------------------------- */
+document.addEventListener("DOMContentLoaded", () => {
+  const openBtn = document.getElementById("openChangelogBtn");
+  const back = document.getElementById("changelogBackdrop");
+  const closeBtn = document.getElementById("closeChangelogBtn");
+  const closeX = document.getElementById("closeChangelogX");
+  const body = document.getElementById("changelogBody");
+  const currentVer = document.getElementById("changelogCurrentVersion");
+
+  if (!openBtn || !back || !body) return;
+
+  function sortVersionsDesc(keys){
+    return keys.sort((a,b) => {
+      const pa = a.split(".").map(n=>parseInt(n,10)||0);
+      const pb = b.split(".").map(n=>parseInt(n,10)||0);
+      for (let i=0;i<3;i++){
+        if ((pb[i]||0) !== (pa[i]||0)) return (pb[i]||0) - (pa[i]||0);
+      }
+      return 0;
+    });
+  }
+
+  function buildChangelog(){
+    const notes = window.APP_RELEASE_NOTES;
+    const ver = window.APP_VERSION;
+
+    if (currentVer) currentVer.textContent = ver || "—";
+
+    if (!notes || typeof notes !== "object") {
+      body.innerHTML = `
+        <div class="changelogVersion">
+          <div class="changelogTop">
+            <div class="ver">No changelog data found</div>
+            <div class="tag">Expose window.APP_RELEASE_NOTES in app.js</div>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    const versions = sortVersionsDesc(Object.keys(notes));
+
+    body.innerHTML = versions.map(v => {
+      const items = notes[v] || [];
+      const isCurrent = (ver && v === ver);
+
+      return `
+        <div class="changelogVersion">
+          <div class="changelogTop">
+            <div class="ver">v${v}${isCurrent ? ' <span class="tag">(current)</span>' : ''}</div>
+            <div class="tag">${items.length} update${items.length===1?'':'s'}</div>
+          </div>
+          <ul class="changelogNotes">
+            ${items.map(n => `<li>${n}</li>`).join("")}
+          </ul>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function open(){
+    buildChangelog();
+    back.style.display = "flex";
+  }
+  function close(){
+    back.style.display = "none";
+  }
+
+  openBtn.addEventListener("click", open);
+  if (closeBtn) closeBtn.addEventListener("click", close);
+  if (closeX) closeX.addEventListener("click", close);
+
+  back.addEventListener("click", (e) => { if (e.target === back) close(); });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && back.style.display === "flex") close();
+  });
 });
 </script>
 
