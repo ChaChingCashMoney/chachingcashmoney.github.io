@@ -2,11 +2,13 @@
   // ====== VERSION (bump this when you ship changes) ======
 const APP_VERSION = "2.0.2";
 const RELEASE_NOTES = {
+  "2.0.2": [
+  "Updated Play tab messaging shown before a game begins."
+],
   "2.0.1": [
   "Added full in-app Changelog viewer (Help → View Changelog).",
   "Changelog automatically renders from RELEASE_NOTES in app.js.",
   "Current version visually marked within history.",
-  "Improved clarity of Play tab messaging before game start.",
   "Improved transparency and release documentation."
 ],
   "2.0.0": [
