@@ -810,7 +810,7 @@ function save(){
     if(S.endModalOpen){
       hint.push("Game ended. Close the popup or start the next game.");
     } else if(!S.inGame){
-      hint.push("No active game. Tap New Game, then stage+submit outcomes.");
+      hint.push("No game started. Go to Setup and tap “Start Game” to begin.");
     } else if(!S.observed){
       hint.push("Observation: stage+submit outcomes until TRUE outcome occurs (R/B or P/B). No bet is placed until then.");
     } else {
