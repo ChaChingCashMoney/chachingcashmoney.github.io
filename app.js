@@ -1,7 +1,17 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-const APP_VERSION = "1.0.4";
+const APP_VERSION = "2.0.0";
 const RELEASE_NOTES = {
+  "2.0.0": [
+  "Major UI overhaul: new Classic Casino felt theme.",
+  "Split app into Play / Setup / Log tab views.",
+  "Added sticky Game HUD with live bankroll + PnL display.",
+  "Removed footer rules wall; added dedicated Help modal.",
+  "Improved mobile usability and layout clarity.",
+  "Log view redesigned with mobile-friendly card layout.",
+  "Outcome buttons now color-coded (Red/Black/Green, Player/Banker/Tie).",
+  "General UI polish and structural cleanup."
+],
   "1.0.4": [
     "Added 'Learn Strategy' button in top bar.",
     "Added full APP Strategy modal with detailed rule reference.",
