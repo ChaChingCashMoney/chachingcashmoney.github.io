@@ -83,30 +83,6 @@
     .bankrollRow > div:first-child{flex:1;min-width:0;}
     .bankrollRow > div:last-child{flex:0 0 110px;}
     #applyBankrollBtn{width:100%;}
-
-    /* ===== Tabs ===== */
-    .tabsBar{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin:8px 0 12px;
-    }
-    .tabBtn{
-      width:auto;
-      padding:10px 12px;
-      font-size:13px;
-      font-weight:900;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.03);
-      cursor:pointer;
-    }
-    .tabBtn.active{
-      border-color:rgba(74,163,255,.55);
-      background:rgba(74,163,255,.10);
-    }
-    .tabPanel{display:none;}
-    .tabPanel.active{display:block;}
   </style>
 </head>
 
@@ -121,9 +97,9 @@
 
     <div class="top-actions">
       <span class="badge">Version <b id="versionBadge">—</b></span>
-      <button id="openStrategyBtn" class="btn" type="button" style="padding:6px 10px; font-size:12px; width:auto;">
-        Learn Strategy
-      </button>
+      <button id="openStrategyBtn" class="btn" type="button" style="padding:6px 10px; font-size:12px;">
+  Learn Strategy
+</button>
       <button class="btn primary" id="installBtn" style="display:none; padding:10px 12px; width:auto;">Install APP Betting</button>
     </div>
   </div>
@@ -139,191 +115,163 @@
     </div>
   </div>
 
-  <!-- Tabs -->
-  <div class="tabsBar" role="tablist" aria-label="Main navigation">
-    <button class="tabBtn active" id="tabBtnPlay" type="button" data-tab="tabPlay" role="tab" aria-selected="true">Play</button>
-    <button class="tabBtn" id="tabBtnSettings" type="button" data-tab="tabSettings" role="tab" aria-selected="false">Settings</button>
-    <button class="tabBtn" id="tabBtnLog" type="button" data-tab="tabLog" role="tab" aria-selected="false">Log</button>
+  <!-- YOUR APP UI (unchanged) -->
+  <div class="row">
+    <div class="card small">
+      <label>Game Type</label>
+      <select id="gameType">
+        <option value="roulette">American Roulette (R/B + Green)</option>
+        <option value="baccarat">Vegas Baccarat (Player/Banker + Tie)</option>
+      </select>
+
+      <div class="sep"></div>
+
+      <label>Series</label>
+      <select id="series">
+        <option value="A">Series A</option>
+        <option value="B">Series B</option>
+      </select>
+
+      <div class="sep"></div>
+
+      <label>Start Mode (used when Carry Mode is OFF)</label>
+      <select id="startMode">
+        <option value="SAME">SAME</option>
+        <option value="OPP">OPPOSITE</option>
+      </select>
+
+      <div class="sep"></div>
+
+      <div class="toggleRow">
+        <div class="toggle">
+          <input type="checkbox" id="autoSeries"/>
+          <label style="margin:0;display:flex;gap:8px;align-items:center;">
+            Auto Series
+            <span class="infoBtn" data-tip="autoSeries">i</span>
+          </label>
+        </div>
+        <div class="toggle">
+          <input type="checkbox" id="carryMode"/>
+          <label style="margin:0;display:flex;gap:8px;align-items:center;">
+            Carry Mode
+            <span class="infoBtn" data-tip="carryMode">i</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="sep"></div>
+
+      <label style="display:flex;justify-content:space-between;align-items:center;">
+        <span>Bankroll Manager</span>
+        <span class="infoBtn" data-tip="bankroll">i</span>
+      </label>
+      <div class="toggleRow">
+        <div class="toggle">
+          <input type="checkbox" id="bankrollOn"/>
+          <label style="margin:0;">Enable</label>
+        </div>
+      </div>
+      <div class="bankrollRow">
+        <div style="flex:1 1 160px; min-width:0;">
+          <label>Starting Bankroll</label>
+          <input id="bankrollStart" inputmode="decimal" placeholder="e.g., 300"/>
+        </div>
+       <div style="flex:0 0 104px; display:flex; align-items:flex-end;">
+          <button class="btn primary" id="applyBankrollBtn" style="padding:10px 12px;">Apply</button>
+       </div>
+      </div>
+      <div class="note">
+        Current Bankroll: <b id="bankrollCurrent">—</b><br/>
+        Session Net: <b id="bankrollNet">—</b>
+      </div>
+
+      <div class="sep"></div>
+
+      <button class="btn primary" id="newGameBtn">New Game (observe 1 true outcome first)</button>
+      <button class="btn ok" id="newEveningBtn" style="margin-top:10px;">New Evening (clear log)</button>
+    </div>
+
+    <div class="card grow">
+      <div class="row" style="align-items:center;">
+        <div class="pill"><span class="k">NEXT SIDE</span> <span class="v big" id="nextSide">—</span></div>
+        <div class="pill"><span class="k">NEXT BET</span> <span class="v big" id="nextBet">—</span></div>
+        <div class="pill"><span class="k">MODE</span> <span class="v" id="mode">—</span></div>
+        <div class="pill"><span class="k">MODE LOSSES</span> <span class="v" id="modeLosses">—</span></div>
+        <div class="pill"><span class="k">SERIES</span> <span class="v" id="seriesShow">—</span></div>
+        <div class="pill"><span class="k">GAME PnL</span> <span class="v big" id="gamePnL">0</span></div>
+      </div>
+
+      <div class="sep"></div>
+
+      <div class="row" style="gap:10px;">
+        <div class="pill"><span class="k">STATE</span> <span class="v" id="state">NORMAL</span></div>
+        <div class="pill"><span class="k">CONSEC WINS (SAME)</span> <span class="v" id="cw">0</span></div>
+        <div class="pill"><span class="k">LADDER BET</span> <span class="v" id="ladderBet">—</span></div>
+        <div class="pill"><span class="k">SPLIT LEDGER</span> <span class="v" id="ledger">—</span></div>
+        <div class="pill"><span class="k">SPLIT PHASE</span> <span class="v" id="splitPhase">—</span></div>
+        <div class="pill"><span class="k">NEXT SPLIT BET</span> <span class="v" id="nextSplitBet">—</span></div>
+      </div>
+
+      <div class="sep"></div>
+
+      <div class="selectedBox">
+        <div>
+          <div class="mini">Selected Outcome (not submitted)</div>
+          <div class="selectedTag" id="selectedOutcome">—</div>
+        </div>
+        <div class="actions">
+          <button class="btn" id="clearSelBtn" style="padding:10px 12px;">Clear</button>
+          <button class="btn primary" id="submitSelBtn" style="padding:10px 12px;">Submit</button>
+          <button class="btn ok" id="undoBtn" style="padding:10px 12px;">Undo</button>
+        </div>
+      </div>
+
+      <div class="sep"></div>
+
+      <div class="grid" id="buttons"></div>
+      <div class="note" id="hint"></div>
+    </div>
   </div>
 
-  <!-- ===== PLAY TAB ===== -->
-  <section class="tabPanel active" id="tabPlay" role="tabpanel" aria-labelledby="tabBtnPlay">
-    <div class="row">
-      <div class="card grow">
-        <div class="row" style="align-items:center;">
-          <div class="pill"><span class="k">NEXT SIDE</span> <span class="v big" id="nextSide">—</span></div>
-          <div class="pill"><span class="k">NEXT BET</span> <span class="v big" id="nextBet">—</span></div>
-          <div class="pill"><span class="k">MODE</span> <span class="v" id="mode">—</span></div>
-          <div class="pill"><span class="k">MODE LOSSES</span> <span class="v" id="modeLosses">—</span></div>
-          <div class="pill"><span class="k">SERIES</span> <span class="v" id="seriesShow">—</span></div>
-          <div class="pill"><span class="k">GAME PnL</span> <span class="v big" id="gamePnL">0</span></div>
+  <div class="row" style="margin-top:12px;">
+    <div class="card grow">
+      <div class="row" style="align-items:center; justify-content:space-between;">
+        <div>
+          <div class="muted" style="font-size:12px;">Session Log</div>
+          <div style="font-weight:900;">Rows: <span id="logCount">0</span> &nbsp; | &nbsp; Game#: <span id="gameNo">0</span></div>
         </div>
-
-        <div class="sep"></div>
-
-        <div class="row" style="gap:10px;">
-          <div class="pill"><span class="k">STATE</span> <span class="v" id="state">NORMAL</span></div>
-          <div class="pill"><span class="k">CONSEC WINS (SAME)</span> <span class="v" id="cw">0</span></div>
-          <div class="pill"><span class="k">LADDER BET</span> <span class="v" id="ladderBet">—</span></div>
-          <div class="pill"><span class="k">SPLIT LEDGER</span> <span class="v" id="ledger">—</span></div>
-          <div class="pill"><span class="k">SPLIT PHASE</span> <span class="v" id="splitPhase">—</span></div>
-          <div class="pill"><span class="k">NEXT SPLIT BET</span> <span class="v" id="nextSplitBet">—</span></div>
+        <div class="actions">
+          <button class="btn primary" id="exportCsvBtn" style="padding:10px 12px;">Export CSV</button>
+          <button class="btn danger" id="resetSessionBtn" style="padding:10px 12px;">Reset Session</button>
         </div>
-
-        <div class="sep"></div>
-
-        <div class="selectedBox">
-          <div>
-            <div class="mini">Selected Outcome (not submitted)</div>
-            <div class="selectedTag" id="selectedOutcome">—</div>
-          </div>
-          <div class="actions">
-            <button class="btn" id="clearSelBtn" style="padding:10px 12px;">Clear</button>
-            <button class="btn primary" id="submitSelBtn" style="padding:10px 12px;">Submit</button>
-            <button class="btn ok" id="undoBtn" style="padding:10px 12px;">Undo</button>
-          </div>
-        </div>
-
-        <div class="sep"></div>
-
-        <div class="grid" id="buttons"></div>
-        <div class="note" id="hint"></div>
+      </div>
+      <div class="sep"></div>
+      <div class="log">
+        <table>
+          <thead>
+          <tr>
+            <th>#</th><th>Game#</th><th>Series</th><th>Type</th>
+            <th>Outcome</th><th>Pick</th><th class="right">Bet</th>
+            <th>Result</th><th class="right">ΔPnL</th><th class="right">GamePnL</th>
+            <th>Mode</th><th>State</th><th class="right">Ledger</th><th>Note</th>
+          </tr>
+          </thead>
+          <tbody id="logBody"></tbody>
+        </table>
       </div>
     </div>
-  </section>
-
-  <!-- ===== SETTINGS TAB ===== -->
-  <section class="tabPanel" id="tabSettings" role="tabpanel" aria-labelledby="tabBtnSettings">
-    <div class="row">
-      <div class="card small">
-        <label>Game Type</label>
-        <select id="gameType">
-          <option value="roulette">American Roulette (R/B + Green)</option>
-          <option value="baccarat">Vegas Baccarat (Player/Banker + Tie)</option>
-        </select>
-
-        <div class="sep"></div>
-
-        <label>Series</label>
-        <select id="series">
-          <option value="A">Series A</option>
-          <option value="B">Series B</option>
-        </select>
-
-        <div class="sep"></div>
-
-        <label>Start Mode (used when Carry Mode is OFF)</label>
-        <select id="startMode">
-          <option value="SAME">SAME</option>
-          <option value="OPP">OPPOSITE</option>
-        </select>
-
-        <div class="sep"></div>
-
-        <div class="toggleRow">
-          <div class="toggle">
-            <input type="checkbox" id="autoSeries"/>
-            <label style="margin:0;display:flex;gap:8px;align-items:center;">
-              Auto Series
-              <span class="infoBtn" data-tip="autoSeries">i</span>
-            </label>
-          </div>
-          <div class="toggle">
-            <input type="checkbox" id="carryMode"/>
-            <label style="margin:0;display:flex;gap:8px;align-items:center;">
-              Carry Mode
-              <span class="infoBtn" data-tip="carryMode">i</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="sep"></div>
-
-        <label style="display:flex;justify-content:space-between;align-items:center;">
-          <span>Bankroll Manager</span>
-          <span class="infoBtn" data-tip="bankroll">i</span>
-        </label>
-        <div class="toggleRow">
-          <div class="toggle">
-            <input type="checkbox" id="bankrollOn"/>
-            <label style="margin:0;">Enable</label>
-          </div>
-        </div>
-        <div class="bankrollRow">
-          <div style="flex:1 1 160px; min-width:0;">
-            <label>Starting Bankroll</label>
-            <input id="bankrollStart" inputmode="decimal" placeholder="e.g., 300"/>
-          </div>
-          <div style="flex:0 0 104px; display:flex; align-items:flex-end;">
-            <button class="btn primary" id="applyBankrollBtn" style="padding:10px 12px;">Apply</button>
-          </div>
-        </div>
-        <div class="note">
-          Current Bankroll: <b id="bankrollCurrent">—</b><br/>
-          Session Net: <b id="bankrollNet">—</b>
-        </div>
-
-        <div class="sep"></div>
-
-        <button class="btn primary" id="newGameBtn">New Game (observe 1 true outcome first)</button>
-
-        <!-- Keeping label accurate: your current app.js clears log here -->
-        <button class="btn ok" id="newEveningBtn" style="margin-top:10px;">New Session (Clear Log)</button>
-      </div>
-
-      <div class="card grow">
-        <div class="note">
-          <b>Tip:</b> Play tab is your “table view.” Keep this Settings tab for before/after sessions.
-          <div class="sep"></div>
-          If you want, we can add a true “Reset Day (Keep Log)” button later (requires a small app.js change),
-          but this layout improvement needs no logic changes.
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== LOG TAB ===== -->
-  <section class="tabPanel" id="tabLog" role="tabpanel" aria-labelledby="tabBtnLog">
-    <div class="row" style="margin-top:0;">
-      <div class="card grow">
-        <div class="row" style="align-items:center; justify-content:space-between;">
-          <div>
-            <div class="muted" style="font-size:12px;">Session Log</div>
-            <div style="font-weight:900;">Rows: <span id="logCount">0</span> &nbsp; | &nbsp; Game#: <span id="gameNo">0</span></div>
-          </div>
-          <div class="actions">
-            <button class="btn primary" id="exportCsvBtn" style="padding:10px 12px;">Export CSV</button>
-            <button class="btn danger" id="resetSessionBtn" style="padding:10px 12px;">Reset Session</button>
-          </div>
-        </div>
-        <div class="sep"></div>
-        <div class="log">
-          <table>
-            <thead>
-            <tr>
-              <th>#</th><th>Game#</th><th>Series</th><th>Type</th>
-              <th>Outcome</th><th>Pick</th><th class="right">Bet</th>
-              <th>Result</th><th class="right">ΔPnL</th><th class="right">GamePnL</th>
-              <th>Mode</th><th>State</th><th class="right">Ledger</th><th>Note</th>
-            </tr>
-            </thead>
-            <tbody id="logBody"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </section>
+  </div>
 
 </div>
 
 <div class="footerbar" id="footerBar">
   <div class="wrap" style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
     <div class="note">
-      Rules baked in: NORMAL capped (A:30, B:60). Split triggers only from NORMAL cap-loss (roulette: cap+green counts).
-      Split freezes ladder. Tie during split = push (repeat same split bet). TP ends immediately in SPLIT; TP ends at streak loss in STREAK.
+      Rules baked in: NORMAL capped (A:30, B:60). Split triggers only from NORMAL cap-loss (roulette: cap+green counts). Split freezes ladder. Tie during split = push (repeat same split bet). TP ends immediately in SPLIT; TP ends at streak loss in STREAK.
     </div>
     <button id="closeFooterBtn" style="background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;">✕</button>
   </div>
+</div>
 </div>
 
 <!-- Tooltip Modal -->
@@ -360,13 +308,84 @@
     <div class="sep"></div>
 
     <div class="content" id="strategyBody" style="font-size:14px; line-height:1.5;">
-      <!-- (Your strategy text unchanged) -->
       <p class="muted" style="margin-top:0;">
         This page explains exactly what the tracker is doing. It is a reference for the rules, states, and edge cases.
       </p>
 
-      <!-- Keep the rest of your strategy content exactly as-is -->
-      <!-- ... -->
+      <h3 style="margin:14px 0 8px;">Core Concepts</h3>
+      <ul style="margin:0 0 10px; padding-left:18px;">
+        <li><b>Outcomes:</b> Roulette uses Red/Black with Green as neutral; Baccarat uses Player/Banker with Tie as neutral.</li>
+        <li><b>Observation:</b> Each game begins by observing outcomes until the first <b>true</b> outcome occurs (R/B or P/B). No bet is placed before that.</li>
+        <li><b>Placement Mode:</b> The system is always in <b>SAME</b> or <b>OPPOSITE</b>.
+          <ul style="margin:6px 0 0; padding-left:18px;">
+            <li><b>SAME:</b> next pick = last true outcome</li>
+            <li><b>OPPOSITE:</b> next pick = opposite of last true outcome</li>
+          </ul>
+        </li>
+        <li><b>Phases:</b> NORMAL (ladder), STREAK (press), SPLIT (ledger recovery).</li>
+      </ul>
+
+      <h3 style="margin:14px 0 8px;">Series A vs Series B</h3>
+      <ul style="margin:0 0 10px; padding-left:18px;">
+        <li><b>Series A:</b> base $5, TP +$40, SL −$100, cap $30</li>
+        <li><b>Series B:</b> base $10, TP +$80, SL −$200, cap $60</li>
+        <li><b>Auto Series:</b> if ON → a Series A SL forces exactly one Series B game, then returns to Series A</li>
+      </ul>
+
+      <h3 style="margin:14px 0 8px;">Placement Switching (SAME / OPPOSITE)</h3>
+      <ul style="margin:0 0 10px; padding-left:18px;">
+        <li><b>SAME → switch after 2 losses</b> (loss counter increments only on true losses)</li>
+        <li><b>OPPOSITE → switch after 1 loss</b></li>
+        <li><b>Roulette Green:</b> counts as a financial loss but does <b>not</b> increment the mode-loss counter</li>
+        <li><b>Baccarat Tie:</b> push; does not change mode or last true outcome</li>
+      </ul>
+
+      <h3 style="margin:14px 0 8px;">NORMAL Phase (Ladder Betting)</h3>
+      <ul style="margin:0 0 10px; padding-left:18px;">
+        <li>Win → bet decreases by <b>$2</b> (Series A) or <b>$4</b> (Series B)</li>
+        <li>Loss → bet increases by <b>$3</b> (Series A) or <b>$6</b> (Series B)</li>
+        <li><b>Hard cap:</b> normal bet never exceeds <b>$30</b> (A) or <b>$60</b> (B)</li>
+      </ul>
+
+      <h3 style="margin:14px 0 8px;">STREAK Phase (Pressing)</h3>
+      <ul style="margin:0 0 10px; padding-left:18px;">
+        <li><b>Entry:</b> triggered by <b>2 consecutive wins while in SAME</b></li>
+        <li><b>Press:</b> each streak win increases next bet by the base unit (+$5 A, +$10 B)</li>
+        <li><b>Exit:</b> first streak loss ends the streak; app returns to NORMAL at the streak anchor (e.g., $18 in A / $36 in B)</li>
+        <li><b>TP handling:</b> if TP is reached during a streak, the game ends when the streak ends (on the streak loss)</li>
+      </ul>
+
+<h3 style="margin:14px 0 8px;">SPLIT Phase (Ledger Recovery)</h3>
+<ul style="margin:0 0 10px; padding-left:18px;">
+  <li><b>Trigger:</b> only from a <b>NORMAL</b> loss when the placed bet was the cap</li>
+  <li><b>Ledger start:</b> $60 (A) or $120 (B)</li>
+  <li><b>Probe:</b> bet minimum ($5 A / $10 B). Loss → add probe to ledger and probe again. Win → subtract probe and move to paydown.</li>
+  <li>
+    <b>Paydown:</b> After a winning probe, divide the current ledger in half and round up. 
+    Bet that amount first.
+    <ul style="margin:6px 0 0; padding-left:18px;">
+      <li><b>If it wins:</b> bet the remaining balance to fully clear the ledger.</li>
+      <li><b>If either paydown bet loses:</b> add that amount back to the ledger and return to the minimum probe bet.</li>
+    </ul>
+  </li>
+  <li><b>Max paydown bet:</b> capped at 18× base ($90 A / $180 B)</li>
+  <li><b>Exit:</b> when the split ledger reaches 0, split ends; app returns to NORMAL at the split-clear anchor (e.g., $15 in A / $30 in B)</li>
+  <li><b>Ladder freeze:</b> while SPLIT is active, the NORMAL ladder bet does not update</li>
+  <li><b>TP handling:</b> TP ends the game immediately during split</li>
+  <li><b>Ties in split (baccarat):</b> push; ledger unchanged; repeat same split bet</li>
+</ul>
+
+      <h3 style="margin:14px 0 8px;">Game End</h3>
+      <ul style="margin:0 0 10px; padding-left:18px;">
+        <li>TP or SL triggers an end-game popup and the game stops</li>
+        <li>The recommended Day PnL is +$80 or -$100</li>
+        <li>Bankroll Manager (if enabled) updates bankroll only when a game ends</li>
+      </ul>
+
+      <div class="sep"></div>
+      <p class="muted" style="margin:0;">
+        Tip: Memorize this strategy and practice online without relying on the app so you’re fully prepared for live table games where mobile phone use isn’t permitted.
+      </p>
     </div>
 
     <div class="sep"></div>
@@ -392,30 +411,7 @@
 <!-- App logic moved here -->
 <script src="/app.js"></script>
 
-<script>
-  // Tabs (no app.js changes needed)
-  document.addEventListener("DOMContentLoaded", () => {
-    const btns = Array.from(document.querySelectorAll(".tabBtn"));
-    const panels = Array.from(document.querySelectorAll(".tabPanel"));
-
-    function setTab(tabId){
-      for (const b of btns){
-        const isActive = b.getAttribute("data-tab") === tabId;
-        b.classList.toggle("active", isActive);
-        b.setAttribute("aria-selected", isActive ? "true" : "false");
-      }
-      for (const p of panels){
-        p.classList.toggle("active", p.id === tabId);
-      }
-      // convenience: scroll to top of content when switching tabs
-      window.scrollTo({top:0, behavior:"instant"});
-    }
-
-    btns.forEach(b => b.addEventListener("click", () => setTab(b.getAttribute("data-tab"))));
-  });
-</script>
-
-<script>
+  <script>
 document.addEventListener("DOMContentLoaded", () => {
   const openBtn = document.getElementById("openStrategyBtn");
   const back = document.getElementById("strategyBackdrop");
@@ -433,14 +429,17 @@ document.addEventListener("DOMContentLoaded", () => {
   if (close1) close1.addEventListener("click", closeStrategy);
   if (close2) close2.addEventListener("click", closeStrategy);
 
+  // click outside modal closes
   back.addEventListener("click", (e) => {
     if (e.target === back) closeStrategy();
   });
 
+  // escape closes
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && back.style.display === "flex") closeStrategy();
   });
 
+  // Copy (plain text)
   if (copyBtn) {
     copyBtn.addEventListener("click", async () => {
       try{
