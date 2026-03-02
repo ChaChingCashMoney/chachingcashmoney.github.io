@@ -987,8 +987,8 @@ body.show-advanced [data-adv="inlineflex"]{
       <ul style="margin:0 0 10px; padding-left:18px;">
         <li><b>SAME → switch after 2 losses</b> (loss counter increments only on true losses)</li>
         <li><b>OPPOSITE → switch after 1 loss</b></li>
-        <li><b>Roulette Green:</b> counts as a financial loss but does <b>not</b> increment the mode-loss counter</li>
-        <li><b>Baccarat Tie:</b> push; does not change mode or last true outcome</li>
+        <li><b>Roulette Green:</b> treated as a financial loss (ladder increases) but does <b>not</b> increment the mode-loss counter</li>
+        <li><b>Baccarat Tie:</b> push (no bet / no PnL change); does not change mode or last true outcome</li>
       </ul>
 
       <h3 style="margin:14px 0 8px;">NORMAL Phase (Ladder Betting)</h3>
@@ -1001,7 +1001,9 @@ body.show-advanced [data-adv="inlineflex"]{
       <h3 style="margin:14px 0 8px;">STREAK Phase (Pressing)</h3>
       <ul style="margin:0 0 10px; padding-left:18px;">
         <li><b>Entry:</b> triggered by <b>2 consecutive wins while in SAME</b></li>
-        <li><b>Press:</b> each streak win increases next bet by the base unit (+$5 A, +$10 B)</li>
+        <li><b>Important:</b> the NORMAL win-decrease applies first, then STREAK begins</li>
+        <li><b>First STREAK bet:</b> (current ladder bet after the 2nd win decrease) + base unit (+$5 A, +$10 B)</li>
+        <li><b>Press:</b> each streak win increases the next bet by the base unit (+$5 A, +$10 B)</li>
         <li><b>Exit:</b> first streak loss ends the streak; app returns to NORMAL at the streak anchor (e.g., $18 in A / $36 in B)</li>
         <li><b>TP handling:</b> if TP is reached during a streak, the game ends when the streak ends (on the streak loss)</li>
       </ul>
