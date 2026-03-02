@@ -1,7 +1,21 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-  const APP_VERSION = "2.1.1";
+  const APP_VERSION = "2.1.2";
   const RELEASE_NOTES = {
+    "2.1.2": [
+      "Improved submit handling to prevent rare freeze conditions during extended sessions.",
+      "Refined cap-to-split trigger logic for consistent activation on true cap losses.",
+      "Hardened state transitions across NORMAL, STREAK, and SPLIT phases.",
+      "Improved undo stack behavior for greater session stability.",
+      "General engine stability improvements and internal cleanup."
+    ],
+    "2.1.1": [
+      "Converted entire betting engine to a strict whole-dollar system.",
+      "Removed all cent-based calculations to eliminate decimal drift.",
+      "Standardized integer-safe calculations across ladder, streak, split, and bankroll logic.",
+      "Updated Banker commission handling to use correct whole-dollar rounding.",
+      "Improved consistency of displayed and logged values."
+    ],
     "2.1.0": [
       "Simplified Setup flow to reduce cognitive load and improve onboarding.",
       "Removed redundant Setup preview panel for cleaner configuration experience.",
