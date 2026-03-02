@@ -650,155 +650,160 @@
     return false;
   }
 
-  function submitPending(){
-    if(!S.pendingOutcome) return;
-    pushUndo();
-    const outcome = S.pendingOutcome;
+function submitPending(){
+  if(!S.pendingOutcome) return;
+  if(S.endModalOpen) return;
 
-    if(S.endModalOpen){ return; }
-    if(observeOrBet(outcome)) return;
+  const outcome = S.pendingOutcome;
 
-    const p = currentParams();
-    const pick = computePick();
-    const neutral = isNeutral(outcome);
+  // Observation may consume outcome
+  if(observeOrBet(outcome)) return;
 
-    // Ensure bets are always whole dollars
-    let bet = 0;
-    if(S.phase === "NORMAL") bet = toInt(S.ladderBet);
-    else if(S.phase === "STREAK") bet = toInt(S.streakBet);
-    else if(S.phase === "SPLIT") bet = toInt(S.nextSplitBet || p.min);
+  // Now this is a real bet resolution
+  pushUndo();
 
-    let result = "L";
-    let won = false;
+  const p = currentParams();
+  const pick = computePick();
+  const neutral = isNeutral(outcome);
 
-    if(S.gameType === "baccarat" && outcome === "T"){
-      result = "P";
-      bet = 0;
-    } else if(S.gameType === "roulette" && outcome === "G"){
-      result = "L";
-      won = false;
-    } else {
-      won = (outcome === pick);
-      result = won ? "W" : "L";
-    }
+  let bet = 0;
+  if(S.phase === "NORMAL") bet = toInt(S.ladderBet);
+  else if(S.phase === "STREAK") bet = toInt(S.streakBet);
+  else if(S.phase === "SPLIT") bet = toInt(S.nextSplitBet || p.min);
 
-    let delta = 0;
-    if(result !== "P" && bet > 0){
-      delta = settleProfit(bet, won, pick);
-      S.gamePnL = toInt(S.gamePnL + delta); // integer PnL always
-    }
+  let result = "L";
+  let won = false;
 
-    logRow({
-      outcome: formatOutcome(outcome),
-      pick: pick ? formatOutcome(pick) : "—",
-      bet,
-      result,
-      delta: toInt(delta),
-      note: ""
-    });
-
-    if(isTrue(outcome)) S.lastTrue = outcome;
-    S.pendingOutcome = null;
-
-    if(result === "P"){ save(); render(); return; }
-
-    // ===== PHASE LOGIC (unchanged strategy, integer-safe state) =====
-    if(S.phase === "NORMAL"){
-      if(won){
-        applyModeWin();
-        if(S.mode === "SAME") S.consecWinsSame += 1;
-        else S.consecWinsSame = 0;
-
-        S.ladderBet = toInt(clamp(toInt(S.ladderBet) - p.decW, p.min, p.cap));
-
-        if(S.mode === "SAME" && S.consecWinsSame >= 2){ enterStreak(); }
-      } else {
-        S.consecWinsSame = 0;
-
-        S.ladderBet = toInt(clamp(toInt(S.ladderBet) + p.incL, p.min, p.cap));
-
-        applyModeLoss(neutral);
-
-        const atCap = (bet === p.cap);
-        if(atCap){
-          if(!neutral){ enterSplit(); }
-          else if(S.gameType === "roulette" && outcome === "G"){ enterSplit(); }
-        }
-      }
-      if(checkEndOutsideStreak()) return;
-    }
-    else if(S.phase === "STREAK"){
-      if(won){
-        applyModeWin();
-        S.streakBet = toInt(toInt(S.streakBet) + p.base); // integer streak
-        if(S.gamePnL >= p.tp) S.tpHitDuringStreak = true;
-      } else {
-        applyModeLoss(neutral);
-        const tpReached = S.tpHitDuringStreak || (S.gamePnL >= p.tp);
-        exitStreakAfterLoss();
-        if(tpReached){ endGame("TP"); return; }
-      }
-      if(S.gamePnL <= p.sl){ endGame("SL"); return; }
-    }
-    else if(S.phase === "SPLIT"){
-      if(S.splitPhase === "PROBE"){
-        if(won){
-          applyModeWin();
-
-          S.ledger = Math.max(0, toInt(toInt(S.ledger) - p.min));
-
-          computeSplitHalves();
-          S.splitPhase = "PAY1";
-          S.nextSplitBet = toInt(S.half1);
-        } else {
-          S.ledger = toInt(toInt(S.ledger) + p.min);
-
-          applyModeLoss(neutral);
-          S.nextSplitBet = toInt(p.min);
-        }
-      }
-      else if(S.splitPhase === "PAY1"){
-        if(won){
-          applyModeWin();
-
-          S.ledger = Math.max(0, toInt(toInt(S.ledger) - S.half1));
-
-          S.splitPhase = "PAY2";
-          S.nextSplitBet = Math.max(0, toInt(S.half2));
-        } else {
-          S.ledger = toInt(toInt(S.ledger) + S.half1);
-
-          applyModeLoss(neutral);
-          S.splitPhase = "PROBE";
-          S.nextSplitBet = toInt(p.min);
-        }
-      }
-      else if(S.splitPhase === "PAY2"){
-        if(won){
-          applyModeWin();
-
-          S.ledger = Math.max(0, toInt(toInt(S.ledger) - S.half2));
-
-          if(S.ledger <= 0){
-            clearSplit();
-          } else {
-            S.splitPhase = "PROBE";
-            S.nextSplitBet = toInt(p.min);
-          }
-        } else {
-          S.ledger = toInt(toInt(S.ledger) + S.half2);
-
-          applyModeLoss(neutral);
-          S.splitPhase = "PROBE";
-          S.nextSplitBet = toInt(p.min);
-        }
-      }
-
-      if(checkEndOutsideStreak()) return;
-    }
-
-    save(); render();
+  if(S.gameType === "baccarat" && outcome === "T"){
+    result = "P";
+    bet = 0;
+  } else if(S.gameType === "roulette" && outcome === "G"){
+    result = "L";
+    won = false;
+  } else {
+    won = (outcome === pick);
+    result = won ? "W" : "L";
   }
+
+  let delta = 0;
+  if(result !== "P" && bet > 0){
+    delta = settleProfit(bet, won, pick);
+    S.gamePnL = toInt(S.gamePnL + delta);
+  }
+
+  logRow({
+    outcome: formatOutcome(outcome),
+    pick: pick ? formatOutcome(pick) : "—",
+    bet,
+    result,
+    delta: toInt(delta),
+    note: ""
+  });
+
+  if(isTrue(outcome)) S.lastTrue = outcome;
+  S.pendingOutcome = null;
+
+  if(result === "P"){ save(); render(); return; }
+
+  // ===== NORMAL =====
+  if(S.phase === "NORMAL"){
+    if(won){
+      applyModeWin();
+      if(S.mode === "SAME") S.consecWinsSame += 1;
+      else S.consecWinsSame = 0;
+
+      S.ladderBet = toInt(clamp(toInt(S.ladderBet) - p.decW, p.min, p.cap));
+
+      if(S.mode === "SAME" && S.consecWinsSame >= 2){
+        enterStreak();
+      }
+    } else {
+      S.consecWinsSame = 0;
+
+      S.ladderBet = toInt(clamp(toInt(S.ladderBet) + p.incL, p.min, p.cap));
+
+      applyModeLoss(neutral);
+
+      const atCap = (bet === p.cap);
+      if(atCap && !won){
+        if(!neutral){
+          enterSplit();
+        } else if(S.gameType === "roulette" && outcome === "G"){
+          enterSplit();
+        }
+      }
+    }
+
+    if(checkEndOutsideStreak()) return;
+  }
+
+  // ===== STREAK =====
+  else if(S.phase === "STREAK"){
+    if(won){
+      applyModeWin();
+      S.streakBet = toInt(toInt(S.streakBet) + p.base);
+      if(S.gamePnL >= p.tp) S.tpHitDuringStreak = true;
+    } else {
+      applyModeLoss(neutral);
+      const tpReached = S.tpHitDuringStreak || (S.gamePnL >= p.tp);
+      exitStreakAfterLoss();
+      if(tpReached){ endGame("TP"); return; }
+    }
+    if(S.gamePnL <= p.sl){ endGame("SL"); return; }
+  }
+
+  // ===== SPLIT =====
+  else if(S.phase === "SPLIT"){
+    if(S.splitPhase === "PROBE"){
+      if(won){
+        applyModeWin();
+        S.ledger = Math.max(0, toInt(toInt(S.ledger) - p.min));
+        computeSplitHalves();
+        S.splitPhase = "PAY1";
+        S.nextSplitBet = toInt(S.half1);
+      } else {
+        S.ledger = toInt(toInt(S.ledger) + p.min);
+        applyModeLoss(neutral);
+        S.nextSplitBet = toInt(p.min);
+      }
+    }
+    else if(S.splitPhase === "PAY1"){
+      if(won){
+        applyModeWin();
+        S.ledger = Math.max(0, toInt(toInt(S.ledger) - S.half1));
+        S.splitPhase = "PAY2";
+        S.nextSplitBet = Math.max(0, toInt(S.half2));
+      } else {
+        S.ledger = toInt(toInt(S.ledger) + S.half1);
+        applyModeLoss(neutral);
+        S.splitPhase = "PROBE";
+        S.nextSplitBet = toInt(p.min);
+      }
+    }
+    else if(S.splitPhase === "PAY2"){
+      if(won){
+        applyModeWin();
+        S.ledger = Math.max(0, toInt(toInt(S.ledger) - S.half2));
+        if(S.ledger <= 0){
+          clearSplit();
+        } else {
+          S.splitPhase = "PROBE";
+          S.nextSplitBet = toInt(p.min);
+        }
+      } else {
+        S.ledger = toInt(toInt(S.ledger) + S.half2);
+        applyModeLoss(neutral);
+        S.splitPhase = "PROBE";
+        S.nextSplitBet = toInt(p.min);
+      }
+    }
+
+    if(checkEndOutsideStreak()) return;
+  }
+
+  save();
+  render();
+}
 
   function clearSelection(){
     pushUndo();
