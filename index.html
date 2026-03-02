@@ -310,12 +310,13 @@
     .hudRight{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
     .hudPill{padding:7px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);}
 
-/* Next Bet styling */
+/* Next Bet styling — match outcome button exactly */
 #nextBetPill{
   position: relative;
   overflow: hidden;
   background: var(--rouletteGreen);
-  border: 1px solid rgba(255,255,255,.25);
+  border: 1px solid rgba(255,255,255,.18);
+  box-shadow: 0 14px 26px rgba(0,0,0,.22);
   color: #fff;
 }
 
@@ -329,13 +330,15 @@
   opacity:.65;
   pointer-events:none;
 }
-    #nextBetPill .k{
-  color: #fff;
-  font-weight: 900;
+
+#nextBetPill .k{
+  color:#fff;
+  font-weight:900;
 }
+
 #nextBetPill .v::before{
-  content: "$";
-  margin-right: 4px;
+  content:"$";
+  margin-right:4px;
 }
 
     /* Info button */
@@ -555,7 +558,27 @@ body.show-advanced [data-adv="inlineflex"]{
 
 #nextSidePill{
   color:#fff;
-  border:1px solid rgba(255,255,255,.25);
+  border:1px solid rgba(255,255,255,.18);
+}
+    /* NEXT SIDE gloss + depth (match outcome buttons) */
+#nextSidePill{
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 14px 26px rgba(0,0,0,.22);
+}
+#nextSidePill::before{
+  content:"";
+  position:absolute;
+  inset:-40% -20% auto -20%;
+  height:120%;
+  background:linear-gradient(180deg, rgba(255,255,255,.16), transparent 55%);
+  transform:rotate(8deg);
+  opacity:.65;
+  pointer-events:none;
+}
+    #nextSidePill .k{
+  color:#fff;
+  font-weight:900;
 }
   </style>
 </head>
