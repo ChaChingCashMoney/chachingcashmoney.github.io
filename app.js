@@ -1,118 +1,119 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-const APP_VERSION = "2.1.0";
-const RELEASE_NOTES = {
-  "2.1.0": [
-  "Simplified Setup flow to reduce cognitive load and improve onboarding.",
-  "Removed redundant Setup preview panel for cleaner configuration experience.",
-  "Refined toggle system: all Setup checkboxes converted to iOS-style On/Off switches.",
-  "Standardized info ('i') button alignment across Setup options.",
-  "Improved desktop dropdown readability (fixed white-on-white option issue).",
-  "Enhanced mobile layout: top bar now scrolls naturally with page.",
-  "Improved iPhone safe-area handling (notch compatibility).",
-  "Daily Session Discipline modal upgraded: now enforces acknowledgment after viewing Strategy.",
-  "Refined Discipline targets with Series A ($5 base) and Series B Exclusive ($10 base) clarity.",
-  "Further visual polish to Next Side and Next Bet display styling.",
-  "General UI cleanup and structural simplification."
-],
-  "2.0.2": [
-  "Updated Play tab messaging shown before a game begins."
-],
-  "2.0.1": [
-  "Added full in-app Changelog viewer (Help → View Changelog).",
-  "Changelog automatically renders from RELEASE_NOTES in app.js.",
-  "Current version visually marked within history.",
-  "Improved transparency and release documentation."
-],
-  "2.0.0": [
-  "Major UI overhaul: new Classic Casino felt theme.",
-  "Split app into Play / Setup / Log tab views.",
-  "Added sticky Game HUD with live bankroll + PnL display.",
-  "Removed footer rules wall; added dedicated Help modal.",
-  "Improved mobile usability and layout clarity.",
-  "Log view redesigned with mobile-friendly card layout.",
-  "Outcome buttons now color-coded (Red/Black/Green, Player/Banker/Tie).",
-  "General UI polish and structural cleanup."
-],
-  "1.0.4": [
-    "Added 'Learn Strategy' button in top bar.",
-    "Added full APP Strategy modal with detailed rule reference.",
-    "Added copy-to-clipboard for strategy text.",
-    "UI stability improvements."
-  ],
-  "1.0.3": [
-    "Fixed localStorage quota crash (undo history no longer persisted).",
-    "Added log size safeguard to prevent storage overflow.",
-    "Improved overall session stability.",
-    "UI polish and stability improvements."
-  ],
-  "1.0.2": [
-    "Update banner pipeline verified (Refresh applies the new version).",
-    "Improved offline update reliability with cache bump workflow."
-  ],
-  "1.0.1": [
-    "Version badge added.",
-    "Install button enabled on supported devices."
-  ],
-  "1.0.0": [
-    "Initial PWA release: installable + offline support.",
-    "APP Tracker core functionality (log, CSV export, bankroll manager)."
-  ]
-};
+  const APP_VERSION = "2.1.1";
+  const RELEASE_NOTES = {
+    "2.1.0": [
+      "Simplified Setup flow to reduce cognitive load and improve onboarding.",
+      "Removed redundant Setup preview panel for cleaner configuration experience.",
+      "Refined toggle system: all Setup checkboxes converted to iOS-style On/Off switches.",
+      "Standardized info ('i') button alignment across Setup options.",
+      "Improved desktop dropdown readability (fixed white-on-white option issue).",
+      "Enhanced mobile layout: top bar now scrolls naturally with page.",
+      "Improved iPhone safe-area handling (notch compatibility).",
+      "Daily Session Discipline modal upgraded: now enforces acknowledgment after viewing Strategy.",
+      "Refined Discipline targets with Series A ($5 base) and Series B Exclusive ($10 base) clarity.",
+      "Further visual polish to Next Side and Next Bet display styling.",
+      "General UI cleanup and structural simplification."
+    ],
+    "2.0.2": [
+      "Updated Play tab messaging shown before a game begins."
+    ],
+    "2.0.1": [
+      "Added full in-app Changelog viewer (Help → View Changelog).",
+      "Changelog automatically renders from RELEASE_NOTES in app.js.",
+      "Current version visually marked within history.",
+      "Improved transparency and release documentation."
+    ],
+    "2.0.0": [
+      "Major UI overhaul: new Classic Casino felt theme.",
+      "Split app into Play / Setup / Log tab views.",
+      "Added sticky Game HUD with live bankroll + PnL display.",
+      "Removed footer rules wall; added dedicated Help modal.",
+      "Improved mobile usability and layout clarity.",
+      "Log view redesigned with mobile-friendly card layout.",
+      "Outcome buttons now color-coded (Red/Black/Green, Player/Banker/Tie).",
+      "General UI polish and structural cleanup."
+    ],
+    "1.0.4": [
+      "Added 'Learn Strategy' button in top bar.",
+      "Added full APP Strategy modal with detailed rule reference.",
+      "Added copy-to-clipboard for strategy text.",
+      "UI stability improvements."
+    ],
+    "1.0.3": [
+      "Fixed localStorage quota crash (undo history no longer persisted).",
+      "Added log size safeguard to prevent storage overflow.",
+      "Improved overall session stability.",
+      "UI polish and stability improvements."
+    ],
+    "1.0.2": [
+      "Update banner pipeline verified (Refresh applies the new version).",
+      "Improved offline update reliability with cache bump workflow."
+    ],
+    "1.0.1": [
+      "Version badge added.",
+      "Install button enabled on supported devices."
+    ],
+    "1.0.0": [
+      "Initial PWA release: installable + offline support.",
+      "APP Tracker core functionality (log, CSV export, bankroll manager)."
+    ]
+  };
 
   // Expose release data for UI (changelog modal)
-window.APP_VERSION = APP_VERSION;
-window.APP_RELEASE_NOTES = RELEASE_NOTES;
-  
-function escapeHtml(s){
-  return String(s)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-  
-function showWhatsNew(version){
-  const backdrop = document.getElementById("whatsNewBackdrop");
-  const title = document.getElementById("whatsNewTitle");
-  const body = document.getElementById("whatsNewBody");
-  const notes = RELEASE_NOTES[version] || ["Bug fixes and improvements."];
+  window.APP_VERSION = APP_VERSION;
+  window.APP_RELEASE_NOTES = RELEASE_NOTES;
 
-  if (!backdrop || !title || !body) return;
+  function escapeHtml(s){
+    return String(s)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
 
-  title.textContent = `What’s New in v${version}`;
-  body.innerHTML = `
-    <ul style="margin:0; padding-left:18px;">
-      ${notes.map(n => `<li style="margin:6px 0;">${escapeHtml(n)}</li>`).join("")}
-    </ul>
-  `;
+  function showWhatsNew(version){
+    const backdrop = document.getElementById("whatsNewBackdrop");
+    const title = document.getElementById("whatsNewTitle");
+    const body = document.getElementById("whatsNewBody");
+    const notes = RELEASE_NOTES[version] || ["Bug fixes and improvements."];
 
-  backdrop.style.display = "flex";
-}
+    if (!backdrop || !title || !body) return;
 
-function closeWhatsNew(){
-  const backdrop = document.getElementById("whatsNewBackdrop");
-  if (backdrop) backdrop.style.display = "none";
-  localStorage.setItem("last_seen_version", APP_VERSION);
-}
+    title.textContent = `What’s New in v${version}`;
+    body.innerHTML = `
+      <ul style="margin:0; padding-left:18px;">
+        ${notes.map(n => `<li style="margin:6px 0;">${escapeHtml(n)}</li>`).join("")}
+      </ul>
+    `;
 
-// Wire close actions
-(() => {
-const closeBtn = document.getElementById("whatsNewCloseBtn");
-const backdrop = document.getElementById("whatsNewBackdrop");
+    backdrop.style.display = "flex";
+  }
 
-if (closeBtn) closeBtn.addEventListener("click", closeWhatsNew);
-if (backdrop) backdrop.addEventListener("click", (e) => {
-  if (e.target && e.target.id === "whatsNewBackdrop") closeWhatsNew();
-});
+  function closeWhatsNew(){
+    const backdrop = document.getElementById("whatsNewBackdrop");
+    if (backdrop) backdrop.style.display = "none";
+    localStorage.setItem("last_seen_version", APP_VERSION);
+  }
 
-// Show once per version...
-const lastSeen = localStorage.getItem("last_seen_version");
-if (lastSeen !== APP_VERSION) {
-  showWhatsNew(APP_VERSION);
-}
-})();
+  // Wire close actions
+  (() => {
+    const closeBtn = document.getElementById("whatsNewCloseBtn");
+    const backdrop = document.getElementById("whatsNewBackdrop");
+
+    if (closeBtn) closeBtn.addEventListener("click", closeWhatsNew);
+    if (backdrop) backdrop.addEventListener("click", (e) => {
+      if (e.target && e.target.id === "whatsNewBackdrop") closeWhatsNew();
+    });
+
+    // Show once per version...
+    const lastSeen = localStorage.getItem("last_seen_version");
+    if (lastSeen !== APP_VERSION) {
+      showWhatsNew(APP_VERSION);
+    }
+  })();
+
   // Put version in UI
   const vb = document.getElementById("versionBadge");
   const vbf = document.getElementById("versionBadgeFooter");
@@ -223,7 +224,7 @@ if (lastSeen !== APP_VERSION) {
         <div style="margin-top:8px;">When a game ends (TP or SL), bankroll updates by that game’s final PnL.</div>
         <div class="muted" style="margin-top:8px;">Bankroll values are not included in CSV export (by design).</div>`
     },
-        advancedPlay: {
+    advancedPlay: {
       title: "Advanced Play Stats",
       body: `
         <div>When enabled, the Play screen shows additional live data:</div>
@@ -237,38 +238,48 @@ if (lastSeen !== APP_VERSION) {
           These are hidden by default for a cleaner live-table view.
         </div>`
     },
-    
     series: {
-  title: "Series Structure",
-  body: `
-    <div><b>Series A:</b> $5 base unit</div>
-    <div class="muted" style="margin-top:6px;">
-      Target: +$40 • Stop: -$100 • Cap: $30
-    </div>
+      title: "Series Structure",
+      body: `
+        <div><b>Series A:</b> $5 base unit</div>
+        <div class="muted" style="margin-top:6px;">
+          Target: +$40 • Stop: -$100 • Cap: $30
+        </div>
 
-    <div style="margin-top:12px;"><b>Series B:</b> $10 base unit</div>
-    <div class="muted" style="margin-top:6px;">
-      Target: +$80 • Stop: -$200 • Cap: $60
-    </div>
+        <div style="margin-top:12px;"><b>Series B:</b> $10 base unit</div>
+        <div class="muted" style="margin-top:6px;">
+          Target: +$80 • Stop: -$200 • Cap: $60
+        </div>
 
-    <div style="margin-top:12px;">
-      Auto Series: If Series A hits SL, exactly one Series B game is triggered.
-    </div>
-  `
-},
+        <div style="margin-top:12px;">
+          Auto Series: If Series A hits SL, exactly one Series B game is triggered.
+        </div>
+      `
+    },
   };
 
   function seriesParams(series){
     if(series === "B"){
-      return { base:10, tp:80, sl:-200, incL:6, decW:4, min:10, cap:60,
-        anchorStreak:ANCHOR_STREAK_A*2, anchorSplit:ANCHOR_SPLITCLEAR_A*2, maxSplitBet:180, splitLedger:120 };
+      return {
+        base:10, tp:80, sl:-200, incL:6, decW:4, min:10, cap:60,
+        anchorStreak:ANCHOR_STREAK_A*2, anchorSplit:ANCHOR_SPLITCLEAR_A*2,
+        maxSplitBet:180, splitLedger:120
+      };
     }
-    return { base:5, tp:40, sl:-100, incL:3, decW:2, min:5, cap:30,
-      anchorStreak:ANCHOR_STREAK_A, anchorSplit:ANCHOR_SPLITCLEAR_A, maxSplitBet:90, splitLedger:60 };
+    return {
+      base:5, tp:40, sl:-100, incL:3, decW:2, min:5, cap:30,
+      anchorStreak:ANCHOR_STREAK_A, anchorSplit:ANCHOR_SPLITCLEAR_A,
+      maxSplitBet:90, splitLedger:60
+    };
   }
 
   const deepCopy = (o)=>JSON.parse(JSON.stringify(o));
   const $ = (id)=>document.getElementById(id);
+
+  // Whole-dollar system helper (force integer state everywhere)
+  function toInt(n){
+    return Math.round(Number(n) || 0);
+  }
 
   const defaultState = () => ({
     sessionId: Date.now(),
@@ -314,29 +325,42 @@ if (lastSeen !== APP_VERSION) {
   });
 
   let S = load() || defaultState();
-S.undoStack = []; // never restore undo history from storage
+  S.undoStack = []; // never restore undo history from storage
 
-function save(){
-  const MAX_LOG_TO_STORE = 5000;
+  // Sanitize legacy decimal values (whole-dollar system)
+  S.gamePnL = toInt(S.gamePnL || 0);
+  if (typeof S.bankrollCurrent === "number") S.bankrollCurrent = toInt(S.bankrollCurrent);
+  if (typeof S.bankrollStart === "number") S.bankrollStart = toInt(S.bankrollStart);
+  if (typeof S.ledger === "number") S.ledger = toInt(S.ledger);
+  if (typeof S.nextSplitBet === "number") S.nextSplitBet = toInt(S.nextSplitBet);
+  if (typeof S.streakBet === "number") S.streakBet = toInt(S.streakBet);
 
-  const trimmedLog = (S.log && S.log.length > MAX_LOG_TO_STORE)
-    ? S.log.slice(-MAX_LOG_TO_STORE)
-    : S.log;
+  function save(){
+    const MAX_LOG_TO_STORE = 5000;
 
-  const toStore = {
-    ...S,
-    log: trimmedLog,
-    undoStack: [] // never persist undo history
-  };
+    const trimmedLog = (S.log && S.log.length > MAX_LOG_TO_STORE)
+      ? S.log.slice(-MAX_LOG_TO_STORE)
+      : S.log;
 
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(toStore));
-}
-  function load(){ try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch(e){ return null; } }
+    const toStore = {
+      ...S,
+      log: trimmedLog,
+      undoStack: [] // never persist undo history
+    };
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(toStore));
+  }
+
+  function load(){
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); }
+    catch(e){ return null; }
+  }
 
   function pushUndo(){
     S.undoStack.push(deepCopy(S));
     if(S.undoStack.length > 300) S.undoStack.shift();
   }
+
   function undo(){
     if(!S.undoStack.length) return;
     S = S.undoStack.pop();
@@ -349,14 +373,17 @@ function save(){
   function isNeutral(outcome){
     return (S.gameType === "roulette") ? (outcome === "G") : (outcome === "T");
   }
+
   function isTrue(outcome){
     return (S.gameType === "roulette")
       ? (outcome === "R" || outcome === "B")
       : (outcome === "P" || outcome === "B");
   }
+
   function oppositeOf(out){
     return (S.gameType === "roulette") ? (out === "R" ? "B" : "R") : (out === "P" ? "B" : "P");
   }
+
   function computePick(){
     if(!S.lastTrue) return null;
     return (S.mode === "SAME") ? S.lastTrue : oppositeOf(S.lastTrue);
@@ -371,9 +398,22 @@ function save(){
   }
 
   function settleProfit(bet, won, pick){
-    if(S.gameType === "roulette") return won ? bet : -bet;
-    if(!won) return -bet;
-    if(pick === "B") return bet * (1.0 - BANKER_COMMISSION);
+    // Whole-dollar system only
+
+    if (S.gameType === "roulette") {
+      return won ? bet : -bet;
+    }
+
+    if (!won) {
+      return -bet;
+    }
+
+    // Baccarat Banker commission (5%) rounded UP to whole dollars
+    if (pick === "B") {
+      const commission = Math.ceil(bet * BANKER_COMMISSION);
+      return bet - commission;
+    }
+
     return bet;
   }
 
@@ -404,7 +444,10 @@ function save(){
     $("tipBody").innerHTML = tips[which]?.body || "";
     $("tipBackdrop").style.display = "flex";
   }
-  function closeTip(){ $("tipBackdrop").style.display = "none"; }
+
+  function closeTip(){
+    $("tipBackdrop").style.display = "none";
+  }
 
   function showEndModal(endedBy, finalPnL){
     S.endModalOpen = true;
@@ -413,19 +456,22 @@ function save(){
 
     const p = currentParams();
     let bankrollLine = `<div class="muted" style="margin-top:8px;">Bankroll manager is OFF.</div>`;
+
     if(S.bankrollOn && typeof S.bankrollCurrent === "number"){
-      bankrollLine = `<div style="margin-top:8px;"><b>Bankroll:</b> ${S.bankrollCurrent.toFixed(2)} <span class="muted">(session net ${(S.bankrollCurrent - (S.bankrollStart||0)).toFixed(2)})</span></div>`;
+      const net = toInt(S.bankrollCurrent - (S.bankrollStart || 0));
+      bankrollLine = `<div style="margin-top:8px;"><b>Bankroll:</b> ${toInt(S.bankrollCurrent)} <span class="muted">(session net ${net})</span></div>`;
     }
 
     $("endTitle").textContent = `GAME ENDED — ${endedBy}`;
     $("endBody").innerHTML = `
       <div><b>Series:</b> ${S.series} &nbsp; <span class="muted">(TP/SL ${p.tp} / ${p.sl})</span></div>
-      <div style="margin-top:8px;"><b>Final Game P&L:</b> ${finalPnL.toFixed(2)}</div>
+      <div style="margin-top:8px;"><b>Final Game P&L:</b> ${toInt(finalPnL)}</div>
       ${bankrollLine}
     `;
     $("endBackdrop").style.display = "flex";
     save(); render();
   }
+
   function closeEndModal(){
     S.endModalOpen = false;
     $("endBackdrop").style.display = "none";
@@ -462,7 +508,7 @@ function save(){
     S.consecWinsSame = 0;
 
     S.phase = "NORMAL";
-    S.ladderBet = p.min;
+    S.ladderBet = toInt(p.min); // integer
     S.streakBet = null;
     S.tpHitDuringStreak = false;
 
@@ -480,7 +526,7 @@ function save(){
 
   function endGame(endedBy){
     if(S.bankrollOn && typeof S.bankrollCurrent === "number"){
-      S.bankrollCurrent = +(S.bankrollCurrent + S.gamePnL).toFixed(2);
+      S.bankrollCurrent = toInt(S.bankrollCurrent + S.gamePnL);
     }
     S.inGame = false;
     S.observed = false;
@@ -490,6 +536,7 @@ function save(){
   }
 
   function applyModeWin(){ S.modeLosses = 0; }
+
   function applyModeLoss(neutralLoss){
     if(neutralLoss) return;
     S.modeLosses += 1;
@@ -503,36 +550,50 @@ function save(){
   function enterStreak(){
     const p = currentParams();
     S.phase = "STREAK";
-    S.streakBet = S.ladderBet + p.base;
+    S.streakBet = toInt(toInt(S.ladderBet) + p.base);
     S.tpHitDuringStreak = false;
     S.consecWinsSame = 0;
   }
+
   function exitStreakAfterLoss(){
     const p = currentParams();
     S.phase = "NORMAL";
     S.streakBet = null;
-    S.ladderBet = p.anchorStreak;
+    S.ladderBet = toInt(p.anchorStreak);
     S.consecWinsSame = 0;
   }
 
   function enterSplit(){
     const p = currentParams();
     S.phase = "SPLIT";
-    S.ledger = p.splitLedger;
+    S.ledger = toInt(p.splitLedger);
     S.splitPhase = "PROBE";
-    S.nextSplitBet = p.min;
+    S.nextSplitBet = toInt(p.min);
     S.half1 = null; S.half2 = null;
     S.consecWinsSame = 0;
     S.streakBet = null;
     S.tpHitDuringStreak = false;
   }
+
   function computeSplitHalves(){
     const p = currentParams();
+
+    // Ensure ledger is always whole dollars
+    S.ledger = toInt(S.ledger);
+
     let h1 = Math.ceil(S.ledger / 2);
     let h2 = S.ledger - h1;
-    if(h1 > p.maxSplitBet){ h1 = p.maxSplitBet; h2 = S.ledger - h1; }
-    S.half1 = h1; S.half2 = h2;
+
+    if(h1 > p.maxSplitBet){
+      h1 = p.maxSplitBet;
+      h2 = S.ledger - h1;
+    }
+
+    // Ensure halves are integers
+    S.half1 = toInt(h1);
+    S.half2 = toInt(h2);
   }
+
   function clearSplit(){
     const p = currentParams();
     S.phase = "NORMAL";
@@ -540,7 +601,7 @@ function save(){
     S.splitPhase = null;
     S.nextSplitBet = null;
     S.half1 = null; S.half2 = null;
-    S.ladderBet = p.anchorSplit;
+    S.ladderBet = toInt(p.anchorSplit);
     S.consecWinsSame = 0;
     S.streakBet = null;
     S.tpHitDuringStreak = false;
@@ -593,6 +654,7 @@ function save(){
     if(!S.pendingOutcome) return;
     pushUndo();
     const outcome = S.pendingOutcome;
+
     if(S.endModalOpen){ return; }
     if(observeOrBet(outcome)) return;
 
@@ -600,10 +662,11 @@ function save(){
     const pick = computePick();
     const neutral = isNeutral(outcome);
 
+    // Ensure bets are always whole dollars
     let bet = 0;
-    if(S.phase === "NORMAL") bet = S.ladderBet;
-    else if(S.phase === "STREAK") bet = Math.round(S.streakBet);
-    else if(S.phase === "SPLIT") bet = Math.round(S.nextSplitBet || p.min);
+    if(S.phase === "NORMAL") bet = toInt(S.ladderBet);
+    else if(S.phase === "STREAK") bet = toInt(S.streakBet);
+    else if(S.phase === "SPLIT") bet = toInt(S.nextSplitBet || p.min);
 
     let result = "L";
     let won = false;
@@ -622,26 +685,38 @@ function save(){
     let delta = 0;
     if(result !== "P" && bet > 0){
       delta = settleProfit(bet, won, pick);
-      S.gamePnL = +(S.gamePnL + delta).toFixed(2);
+      S.gamePnL = toInt(S.gamePnL + delta); // integer PnL always
     }
 
-    logRow({ outcome: formatOutcome(outcome), pick: pick ? formatOutcome(pick) : "—", bet, result, delta: +delta.toFixed(2), note: "" });
+    logRow({
+      outcome: formatOutcome(outcome),
+      pick: pick ? formatOutcome(pick) : "—",
+      bet,
+      result,
+      delta: toInt(delta),
+      note: ""
+    });
 
     if(isTrue(outcome)) S.lastTrue = outcome;
     S.pendingOutcome = null;
 
     if(result === "P"){ save(); render(); return; }
 
+    // ===== PHASE LOGIC (unchanged strategy, integer-safe state) =====
     if(S.phase === "NORMAL"){
       if(won){
         applyModeWin();
         if(S.mode === "SAME") S.consecWinsSame += 1;
         else S.consecWinsSame = 0;
-        S.ladderBet = clamp(S.ladderBet - p.decW, p.min, p.cap);
+
+        S.ladderBet = toInt(clamp(toInt(S.ladderBet) - p.decW, p.min, p.cap));
+
         if(S.mode === "SAME" && S.consecWinsSame >= 2){ enterStreak(); }
       } else {
         S.consecWinsSame = 0;
-        S.ladderBet = clamp(S.ladderBet + p.incL, p.min, p.cap);
+
+        S.ladderBet = toInt(clamp(toInt(S.ladderBet) + p.incL, p.min, p.cap));
+
         applyModeLoss(neutral);
 
         const atCap = (bet === p.cap);
@@ -655,7 +730,7 @@ function save(){
     else if(S.phase === "STREAK"){
       if(won){
         applyModeWin();
-        S.streakBet = S.streakBet + p.base;
+        S.streakBet = toInt(toInt(S.streakBet) + p.base); // integer streak
         if(S.gamePnL >= p.tp) S.tpHitDuringStreak = true;
       } else {
         applyModeLoss(neutral);
@@ -669,49 +744,67 @@ function save(){
       if(S.splitPhase === "PROBE"){
         if(won){
           applyModeWin();
-          S.ledger = Math.max(0, +(S.ledger - p.min).toFixed(2));
+
+          S.ledger = Math.max(0, toInt(toInt(S.ledger) - p.min));
+
           computeSplitHalves();
           S.splitPhase = "PAY1";
-          S.nextSplitBet = S.half1;
+          S.nextSplitBet = toInt(S.half1);
         } else {
-          S.ledger = +(S.ledger + p.min).toFixed(2);
+          S.ledger = toInt(toInt(S.ledger) + p.min);
+
           applyModeLoss(neutral);
-          S.nextSplitBet = p.min;
+          S.nextSplitBet = toInt(p.min);
         }
       }
       else if(S.splitPhase === "PAY1"){
         if(won){
           applyModeWin();
-          S.ledger = Math.max(0, +(S.ledger - S.half1).toFixed(2));
+
+          S.ledger = Math.max(0, toInt(toInt(S.ledger) - S.half1));
+
           S.splitPhase = "PAY2";
-          S.nextSplitBet = Math.max(0, S.half2);
+          S.nextSplitBet = Math.max(0, toInt(S.half2));
         } else {
-          S.ledger = +(S.ledger + S.half1).toFixed(2);
+          S.ledger = toInt(toInt(S.ledger) + S.half1);
+
           applyModeLoss(neutral);
           S.splitPhase = "PROBE";
-          S.nextSplitBet = p.min;
+          S.nextSplitBet = toInt(p.min);
         }
       }
       else if(S.splitPhase === "PAY2"){
         if(won){
           applyModeWin();
-          S.ledger = Math.max(0, +(S.ledger - S.half2).toFixed(2));
-          if(S.ledger <= 0){ clearSplit(); }
-          else { S.splitPhase = "PROBE"; S.nextSplitBet = p.min; }
+
+          S.ledger = Math.max(0, toInt(toInt(S.ledger) - S.half2));
+
+          if(S.ledger <= 0){
+            clearSplit();
+          } else {
+            S.splitPhase = "PROBE";
+            S.nextSplitBet = toInt(p.min);
+          }
         } else {
-          S.ledger = +(S.ledger + S.half2).toFixed(2);
+          S.ledger = toInt(toInt(S.ledger) + S.half2);
+
           applyModeLoss(neutral);
           S.splitPhase = "PROBE";
-          S.nextSplitBet = p.min;
+          S.nextSplitBet = toInt(p.min);
         }
       }
+
       if(checkEndOutsideStreak()) return;
     }
 
     save(); render();
   }
 
-  function clearSelection(){ pushUndo(); S.pendingOutcome = null; save(); render(); }
+  function clearSelection(){
+    pushUndo();
+    S.pendingOutcome = null;
+    save(); render();
+  }
 
   function exportCSV(){
     const cols = ["idx","ts","gameNo","series","gameType","outcome","pick","bet","result","delta","gamePnL",
@@ -744,14 +837,21 @@ function save(){
     if(startStr.length){
       const n = Number(startStr);
       if(!Number.isFinite(n)){ alert("Starting bankroll must be a number."); return; }
-      S.bankrollStart = n;
-      S.bankrollCurrent = n;
+
+      // Whole-dollar system: bankroll values stored as integers
+      const whole = toInt(n);
+      S.bankrollStart = whole;
+      S.bankrollCurrent = whole;
+
+      // Keep the input clean visually too
+      $("bankrollStart").value = String(whole);
     } else {
       if(S.bankrollStart == null){
         S.bankrollStart = null;
         S.bankrollCurrent = null;
       }
     }
+
     save(); render();
   }
 
@@ -815,8 +915,8 @@ function save(){
     const p = currentParams();
 
     if(S.bankrollOn && typeof S.bankrollCurrent === "number" && typeof S.bankrollStart === "number"){
-      $("bankrollCurrent").textContent = S.bankrollCurrent.toFixed(2);
-      $("bankrollNet").textContent = (S.bankrollCurrent - S.bankrollStart).toFixed(2);
+      $("bankrollCurrent").textContent = String(toInt(S.bankrollCurrent));
+      $("bankrollNet").textContent = String(toInt(S.bankrollCurrent - S.bankrollStart));
     } else {
       $("bankrollCurrent").textContent = "—";
       $("bankrollNet").textContent = "—";
@@ -837,9 +937,9 @@ function save(){
     } else {
       const pick = computePick();
       nextSide = formatOutcome(pick);
-      if(S.phase === "NORMAL") nextBet = String(S.ladderBet);
-      else if(S.phase === "STREAK") nextBet = String(Math.round(S.streakBet));
-      else if(S.phase === "SPLIT") nextBet = String(Math.round(S.nextSplitBet || p.min));
+      if(S.phase === "NORMAL") nextBet = String(toInt(S.ladderBet));
+      else if(S.phase === "STREAK") nextBet = String(toInt(S.streakBet));
+      else if(S.phase === "SPLIT") nextBet = String(toInt(S.nextSplitBet || p.min));
     }
 
     $("nextSide").textContent = nextSide;
@@ -847,13 +947,13 @@ function save(){
     $("mode").textContent = S.inGame ? S.mode : "—";
     $("modeLosses").textContent = S.inGame ? String(S.modeLosses) : "—";
     $("seriesShow").textContent = S.series;
-    $("gamePnL").textContent = String(S.gamePnL || 0);
+    $("gamePnL").textContent = String(toInt(S.gamePnL || 0));
     $("state").textContent = S.phase;
     $("cw").textContent = String(S.consecWinsSame);
-    $("ladderBet").textContent = (S.phase === "SPLIT") ? "FROZEN" : (S.ladderBet ? String(S.ladderBet) : "—");
-    $("ledger").textContent = (S.phase === "SPLIT") ? String(S.ledger) : "—";
+    $("ladderBet").textContent = (S.phase === "SPLIT") ? "FROZEN" : (S.ladderBet ? String(toInt(S.ladderBet)) : "—");
+    $("ledger").textContent = (S.phase === "SPLIT") ? String(toInt(S.ledger)) : "—";
     $("splitPhase").textContent = (S.phase === "SPLIT") ? (S.splitPhase || "—") : "—";
-    $("nextSplitBet").textContent = (S.phase === "SPLIT") ? String(Math.round(S.nextSplitBet || p.min)) : "—";
+    $("nextSplitBet").textContent = (S.phase === "SPLIT") ? String(toInt(S.nextSplitBet || p.min)) : "—";
 
     const hint = [];
     if(S.endModalOpen){
