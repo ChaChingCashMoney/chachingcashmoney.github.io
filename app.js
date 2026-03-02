@@ -1,6 +1,6 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-const APP_VERSION = "2.0.2";
+const APP_VERSION = "2.0.3";
 const RELEASE_NOTES = {
   "2.0.2": [
   "Updated Play tab messaging shown before a game begins."
