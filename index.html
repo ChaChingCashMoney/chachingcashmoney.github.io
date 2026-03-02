@@ -648,8 +648,8 @@ body.show-advanced [data-adv="inlineflex"]{
   <span class="infoBtn" data-tip="series">i</span>
 </label>
         <select id="series">
-          <option value="A">Series A</option>
-          <option value="B">Series B</option>
+          <option value="A">Series A ($5 Base)</option>
+          <option value="B">Series B ($10 Base)</option>
         </select>
 
         <div class="sep"></div>
@@ -1098,11 +1098,27 @@ body.show-advanced [data-adv="inlineflex"]{
 
     <div class="content">
       <div class="disciplineHero">
-        <div><b>End the day at:</b></div>
-        <div class="disciplineTargets">
-          <span class="disciplinePill good">+$80 TP</span>
-          <span class="disciplinePill danger">−$300 SL</span>
-        </div>
+<div><b>End the day at:</b></div>
+
+<div class="disciplineSubtle muted" style="margin-top:6px;">
+  Default targets assume a <b>$5 base unit</b> (Series A).
+</div>
+
+<div class="disciplineTargets" style="margin-top:10px;">
+  <span class="disciplinePill good">+$80 TP</span>
+  <span class="disciplinePill danger">−$300 SL</span>
+</div>
+
+<div class="sep" style="margin:14px 0;"></div>
+
+<div class="disciplineSubtle muted">
+  <b>Series B Exclusive ($10 base only):</b>
+</div>
+
+<div class="disciplineTargets" style="margin-top:10px; opacity:.9;">
+  <span class="disciplinePill good">+$160 TP</span>
+  <span class="disciplinePill danger">−$600 SL</span>
+</div>
 
         <div class="disciplineSubtle muted" style="margin-top:10px;">
           This notice appears once per casino day (resets at <b>5:00 AM PT</b>).
@@ -1113,7 +1129,7 @@ body.show-advanced [data-adv="inlineflex"]{
 
       <p style="margin:0;">
         This system is designed for controlled daily sessions.
-        Continuing beyond these limits increases volatility and reduces long-term consistency.
+        Continuing beyond these limits increases volatility and undermines long-term consistency.
       </p>
 
       <div class="note" style="margin-top:10px;">
