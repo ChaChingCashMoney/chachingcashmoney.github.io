@@ -1558,9 +1558,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const todayCasino = casinoDayKeyPT();
   const lastSeen = localStorage.getItem(STORAGE_KEY);
 
-  if (lastSeen !== todayCasino) {
-    open();
-  }
+function isWhatsNewOpen(){
+  const wn = document.getElementById("whatsNewBackdrop");
+  return wn && wn.style.display === "flex";
+}
+
+if (lastSeen !== todayCasino) {
+  // If What's New is open, wait until it closes (then show discipline)
+  const tryOpen = () => {
+    if (!isWhatsNewOpen()) open();
+    else setTimeout(tryOpen, 250);
+  };
+  tryOpen();
+}
 
   ack.addEventListener("click", () => {
     localStorage.setItem(STORAGE_KEY, casinoDayKeyPT());
