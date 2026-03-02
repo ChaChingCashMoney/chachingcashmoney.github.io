@@ -1,7 +1,20 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-const APP_VERSION = "2.0.3";
+const APP_VERSION = "2.1.0";
 const RELEASE_NOTES = {
+  "2.1.0": [
+  "Simplified Setup flow to reduce cognitive load and improve onboarding.",
+  "Removed redundant Setup preview panel for cleaner configuration experience.",
+  "Refined toggle system: all Setup checkboxes converted to iOS-style On/Off switches.",
+  "Standardized info ('i') button alignment across Setup options.",
+  "Improved desktop dropdown readability (fixed white-on-white option issue).",
+  "Enhanced mobile layout: top bar now scrolls naturally with page.",
+  "Improved iPhone safe-area handling (notch compatibility).",
+  "Daily Session Discipline modal upgraded: now enforces acknowledgment after viewing Strategy.",
+  "Refined Discipline targets with Series A ($5 base) and Series B Exclusive ($10 base) clarity.",
+  "Further visual polish to Next Side and Next Bet display styling.",
+  "General UI cleanup and structural simplification."
+],
   "2.0.2": [
   "Updated Play tab messaging shown before a game begins."
 ],
