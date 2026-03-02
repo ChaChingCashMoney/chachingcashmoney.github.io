@@ -1,7 +1,13 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-  const APP_VERSION = "2.1.2";
+  const APP_VERSION = "2.1.3";
   const RELEASE_NOTES = {
+    "2.1.3": [
+      "Optimized undo system to prevent performance slowdowns during extended sessions.",
+      "Reduced memory usage by eliminating full log cloning in undo snapshots.",
+      "Improved submit performance and responsiveness.",
+      "General performance and stability improvements."
+    ],
     "2.1.2": [
       "Improved submit handling to prevent rare freeze conditions during extended sessions.",
       "Refined cap-to-split trigger logic for consistent activation on true cap losses.",
@@ -370,16 +376,37 @@
     catch(e){ return null; }
   }
 
-  function pushUndo(){
-    S.undoStack.push(deepCopy(S));
-    if(S.undoStack.length > 300) S.undoStack.shift();
-  }
+function pushUndo(){
+  // Store a snapshot WITHOUT the growing log to prevent freezes.
+  // We only need log length because we only append to the log.
+  const snap = deepCopy({
+    ...S,
+    log: null,        // exclude log from snapshot (biggest performance win)
+    undoStack: []     // never snapshot undo history
+  });
 
-  function undo(){
-    if(!S.undoStack.length) return;
-    S = S.undoStack.pop();
-    save(); render();
-  }
+  S.undoStack.push({ snap, logLen: (S.log ? S.log.length : 0) });
+  if(S.undoStack.length > 300) S.undoStack.shift();
+}
+
+function undo(){
+  const item = S.undoStack.pop();
+  if(!item) return;
+
+  const { snap, logLen } = item;
+
+  // Keep current log reference, then truncate it back to what it was.
+  const currentLog = S.log || [];
+  S = snap;
+
+  S.log = currentLog;
+  S.log.length = logLen;
+
+  // Always keep undoStack as an in-memory-only stack
+  S.undoStack = S.undoStack || [];
+
+  save(); render();
+}
 
   function clamp(n, lo, hi){ return Math.max(lo, Math.min(hi, n)); }
   function currentParams(){ return seriesParams(S.series); }
@@ -666,20 +693,23 @@
 
 function submitPending(){
   if(!S.pendingOutcome) return;
-  if(S.endModalOpen) return;
 
   const outcome = S.pendingOutcome;
 
-  // Observation may consume outcome
+  // If modal is open, don't accept submissions
+  if(S.endModalOpen){ return; }
+
+  // Observation can consume the outcome (and it already logs + saves)
   if(observeOrBet(outcome)) return;
 
-  // Now this is a real bet resolution
+  // Only now do we snapshot for undo (this is a real state-changing submit)
   pushUndo();
 
   const p = currentParams();
   const pick = computePick();
   const neutral = isNeutral(outcome);
 
+  // Ensure bets are always whole dollars
   let bet = 0;
   if(S.phase === "NORMAL") bet = toInt(S.ladderBet);
   else if(S.phase === "STREAK") bet = toInt(S.streakBet);
@@ -719,7 +749,7 @@ function submitPending(){
 
   if(result === "P"){ save(); render(); return; }
 
-  // ===== NORMAL =====
+  // ===== PHASE LOGIC (integer-safe) =====
   if(S.phase === "NORMAL"){
     if(won){
       applyModeWin();
@@ -728,9 +758,7 @@ function submitPending(){
 
       S.ladderBet = toInt(clamp(toInt(S.ladderBet) - p.decW, p.min, p.cap));
 
-      if(S.mode === "SAME" && S.consecWinsSame >= 2){
-        enterStreak();
-      }
+      if(S.mode === "SAME" && S.consecWinsSame >= 2){ enterStreak(); }
     } else {
       S.consecWinsSame = 0;
 
@@ -739,19 +767,13 @@ function submitPending(){
       applyModeLoss(neutral);
 
       const atCap = (bet === p.cap);
-      if(atCap && !won){
-        if(!neutral){
-          enterSplit();
-        } else if(S.gameType === "roulette" && outcome === "G"){
-          enterSplit();
-        }
+      if(atCap){
+        if(!neutral){ enterSplit(); }
+        else if(S.gameType === "roulette" && outcome === "G"){ enterSplit(); }
       }
     }
-
     if(checkEndOutsideStreak()) return;
   }
-
-  // ===== STREAK =====
   else if(S.phase === "STREAK"){
     if(won){
       applyModeWin();
@@ -765,18 +787,19 @@ function submitPending(){
     }
     if(S.gamePnL <= p.sl){ endGame("SL"); return; }
   }
-
-  // ===== SPLIT =====
   else if(S.phase === "SPLIT"){
     if(S.splitPhase === "PROBE"){
       if(won){
         applyModeWin();
+
         S.ledger = Math.max(0, toInt(toInt(S.ledger) - p.min));
+
         computeSplitHalves();
         S.splitPhase = "PAY1";
         S.nextSplitBet = toInt(S.half1);
       } else {
         S.ledger = toInt(toInt(S.ledger) + p.min);
+
         applyModeLoss(neutral);
         S.nextSplitBet = toInt(p.min);
       }
@@ -784,11 +807,14 @@ function submitPending(){
     else if(S.splitPhase === "PAY1"){
       if(won){
         applyModeWin();
+
         S.ledger = Math.max(0, toInt(toInt(S.ledger) - S.half1));
+
         S.splitPhase = "PAY2";
         S.nextSplitBet = Math.max(0, toInt(S.half2));
       } else {
         S.ledger = toInt(toInt(S.ledger) + S.half1);
+
         applyModeLoss(neutral);
         S.splitPhase = "PROBE";
         S.nextSplitBet = toInt(p.min);
@@ -797,7 +823,9 @@ function submitPending(){
     else if(S.splitPhase === "PAY2"){
       if(won){
         applyModeWin();
+
         S.ledger = Math.max(0, toInt(toInt(S.ledger) - S.half2));
+
         if(S.ledger <= 0){
           clearSplit();
         } else {
@@ -806,6 +834,7 @@ function submitPending(){
         }
       } else {
         S.ledger = toInt(toInt(S.ledger) + S.half2);
+
         applyModeLoss(neutral);
         S.splitPhase = "PROBE";
         S.nextSplitBet = toInt(p.min);
@@ -815,15 +844,8 @@ function submitPending(){
     if(checkEndOutsideStreak()) return;
   }
 
-  save();
-  render();
+  save(); render();
 }
-
-  function clearSelection(){
-    pushUndo();
-    S.pendingOutcome = null;
-    save(); render();
-  }
 
   function exportCSV(){
     const cols = ["idx","ts","gameNo","series","gameType","outcome","pick","bet","result","delta","gamePnL",
