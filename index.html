@@ -1212,7 +1212,15 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!back) return;
 
   function openStrategy(){ back.style.display = "flex"; }
-  function closeStrategy(){ back.style.display = "none"; }
+  function closeStrategy(){
+  back.style.display = "none";
+
+  // If discipline was opened and still pending, bring it back
+  const discipline = document.getElementById("disciplineBackdrop");
+  if (discipline && discipline.dataset.disciplinePending === "1") {
+    discipline.style.display = "flex";
+  }
+}
 
   if (openBtn) openBtn.addEventListener("click", openStrategy);
   if (openBtn2) openBtn2.addEventListener("click", openStrategy);
@@ -1528,7 +1536,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function open(){ back.style.display = "flex"; }
+  function open(){
+  back.dataset.disciplinePending = "1";
+  back.style.display = "flex";
+}
   function close(){ back.style.display = "none"; }
 
   const todayCasino = casinoDayKeyPT();
@@ -1550,15 +1561,22 @@ if (lastSeen !== todayCasino) {
 
   ack.addEventListener("click", () => {
     localStorage.setItem(STORAGE_KEY, casinoDayKeyPT());
+    back.dataset.disciplinePending = "0";
     close();
   });
 
-  if (openStrategy && strategyOpenBtn) {
-    openStrategy.addEventListener("click", () => {
-      close();
-      strategyOpenBtn.click();
-    });
-  }
+if (openStrategy && strategyOpenBtn) {
+  openStrategy.addEventListener("click", () => {
+    // Mark that discipline is still pending acknowledgment
+    back.dataset.disciplinePending = "1";
+
+    // Hide discipline while reading strategy
+    close();
+
+    // Open strategy modal
+    strategyOpenBtn.click();
+  });
+}
 });
 </script>
 
