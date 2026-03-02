@@ -223,7 +223,26 @@ if (lastSeen !== APP_VERSION) {
         <div class="muted" style="margin-top:8px;">
           These are hidden by default for a cleaner live-table view.
         </div>`
-    }
+    },
+    
+    series: {
+  title: "Series Structure",
+  body: `
+    <div><b>Series A:</b> $5 base unit</div>
+    <div class="muted" style="margin-top:6px;">
+      Target: +$40 • Stop: -$100 • Cap: $30
+    </div>
+
+    <div style="margin-top:12px;"><b>Series B:</b> $10 base unit</div>
+    <div class="muted" style="margin-top:6px;">
+      Target: +$80 • Stop: -$200 • Cap: $60
+    </div>
+
+    <div style="margin-top:12px;">
+      Auto Series: If Series A hits SL, exactly one Series B game is triggered.
+    </div>
+  `
+},
   };
 
   function seriesParams(series){
