@@ -848,7 +848,7 @@ function save(){
     } else if(!S.inGame){
       hint.push("No game started. Go to Setup and tap “Start Game” to begin.");
     } else if(!S.observed){
-      hint.push("Observation: stage+submit outcomes until TRUE outcome occurs (R/B or P/B). No bet is placed until then.");
+      hint.push("Observation Phase: Select the side of the previous spin/hand and press Submit to begin.");
     } else {
       hint.push(`Series ${S.series} TP/SL: ${p.tp} / ${p.sl}.`);
       if(S.phase === "STREAK") hint.push("STREAK: press +base each win; TP ends when streak loses.");
