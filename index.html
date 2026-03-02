@@ -744,33 +744,10 @@ body.show-advanced [data-adv="inlineflex"]{
         <button class="btn primary" id="newGameBtn" style="margin-top:10px;">
           Start Game
         </button>
+        <div class="note" style="margin-top:10px;">
+  Review your settings above, then press <b>Start Game</b>.
+</div>
       </div>
-
-      <div class="card grow">
-        <div class="row" style="align-items:center;">
-          <div class="pill"><span class="k">NEXT SIDE</span> <span class="v" id="nextSideSetup">—</span></div>
-          <div class="pill"><span class="k">NEXT BET</span> <span class="v" id="nextBetSetup">—</span></div>
-          <div class="pill"><span class="k">SERIES</span> <span class="v" id="seriesShowSetup">—</span></div>
-        </div>
-
-        <div class="sep"></div>
-
-        <div class="note">
-          Confirm settings here, then switch to <b>Play</b> for live tracking.
-        </div>
-
-        <div class="sep"></div>
-
-        <button class="btn neutral" id="openStrategyBtn2" type="button">Learn Strategy</button>
-        <button class="btn neutral" id="openHelpBtn2" type="button" style="margin-top:10px;">Rules / Help</button>
-
-        <div class="sep"></div>
-
-        <div class="note">
-          On mobile: Setup → Play → Log.
-        </div>
-      </div>
-    </div>
   </section>
 
   <!-- =========================
@@ -1197,9 +1174,6 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   mirrorText("bankrollCurrent", "bankrollCurrentMirror");
   mirrorText("bankrollNet", "bankrollNetMirror");
-  mirrorText("nextSide", "nextSideSetup");
-  mirrorText("nextBet", "nextBetSetup");
-  mirrorText("seriesShow", "seriesShowSetup");
 
     // Minimal Play toggle wiring (persisted)
   const advToggle = document.getElementById("showAdvancedPlay");
