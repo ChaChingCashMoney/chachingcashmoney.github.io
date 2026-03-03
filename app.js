@@ -1,7 +1,12 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-  const APP_VERSION = "2.1.4";
+  const APP_VERSION = "2.1.5";
   const RELEASE_NOTES = {
+    "2.1.5": [
+      "Refined Learn Strategy section for improved clarity and structured tone.",
+      "Updated Quick Help panel for clearer live-session guidance.",
+      "Improved overall in-app documentation and messaging consistency."
+    ],
     "2.1.4": [
       "Refined streak phase reset behavior for smoother transition back to NORMAL.",
       "Improved bet stability following streak loss to reduce volatility spikes.",
