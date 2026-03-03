@@ -221,7 +221,7 @@
   const STORAGE_KEY = "app_tracker_v3";
 
   const BANKER_COMMISSION = 0.05;
-  const ANCHOR_STREAK_A = 18;
+  const ANCHOR_STREAK_A = 15;
   const ANCHOR_SPLITCLEAR_A = 15;
 
   const tips = {
