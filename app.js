@@ -1,7 +1,12 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-  const APP_VERSION = "2.1.3";
+  const APP_VERSION = "2.1.4";
   const RELEASE_NOTES = {
+    "2.1.4": [
+      "Refined streak phase reset behavior for smoother transition back to NORMAL.",
+      "Improved bet stability following streak loss to reduce volatility spikes.",
+      "Minor internal consistency improvements."
+    ],
     "2.1.3": [
       "Optimized undo system to prevent performance slowdowns during extended sessions.",
       "Reduced memory usage by eliminating full log cloning in undo snapshots.",
