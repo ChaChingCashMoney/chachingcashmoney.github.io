@@ -41,7 +41,7 @@
       "Enhanced mobile layout: top bar now scrolls naturally with page.",
       "Improved iPhone safe-area handling (notch compatibility).",
       "Daily Session Discipline modal upgraded: now enforces acknowledgment after viewing Strategy.",
-      "Refined Discipline targets with Series A ($5 base) and Series B Exclusive ($10 base) clarity.",
+      "Refined Discipline targets with Tier 1 ($5 base) and Tier 2 Exclusive ($10 base) clarity.",
       "Further visual polish to Next Side and Next Bet display styling.",
       "General UI cleanup and structural simplification."
     ],
