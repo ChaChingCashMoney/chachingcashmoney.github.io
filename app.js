@@ -977,6 +977,7 @@ function submitPending(){
 
     $("selectedOutcome").textContent = S.pendingOutcome ? formatOutcome(S.pendingOutcome) : "—";
     $("submitSelBtn").disabled = !S.pendingOutcome || S.endModalOpen;
+    $("clearSelBtn").disabled = !S.pendingOutcome || S.endModalOpen;
 
     let nextSide = "—";
     let nextBet = "—";
@@ -1043,6 +1044,7 @@ function submitPending(){
 
   $("submitSelBtn").addEventListener("click", ()=>submitPending());
   $("undoBtn").addEventListener("click", ()=>undo());
+  $("clearSelBtn").addEventListener("click", ()=>clearSelection());
 
   document.querySelectorAll(".infoBtn").forEach(btn=>{
     btn.addEventListener("click", (e)=>showTip(e.currentTarget.getAttribute("data-tip")));
