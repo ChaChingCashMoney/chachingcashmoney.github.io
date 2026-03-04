@@ -244,10 +244,10 @@
 
   const tips = {
     autoSeries: {
-      title: "Auto Series",
+      title: "Auto Tier",
       body: `
-        <div><b>ON:</b> If a Series A game ends at SL, the <b>next game</b> becomes <b>one Series B game only</b>, then returns to Series A.</div>
-        <div class="muted" style="margin-top:8px;">Manual series selection still works if you turn this OFF.</div>`
+        <div><b>ON:</b> If a Tier 1 game ends at SL, the <b>next game</b> becomes <b>one Tier 2 game only</b>, then returns to Tier 1.</div>
+        <div class="muted" style="margin-top:8px;">Manual tier selection still works if you turn this OFF.</div>`
     },
     carryMode: {
       title: "Carry Mode",
@@ -277,20 +277,20 @@
         </div>`
     },
     series: {
-      title: "Series Structure",
+      title: "Tier Structure",
       body: `
-        <div><b>Series A:</b> $5 base unit</div>
+        <div><b>Tier 1:</b> $5 base unit</div>
         <div class="muted" style="margin-top:6px;">
           Target: +$40 • Stop: -$100 • Cap: $30
         </div>
 
-        <div style="margin-top:12px;"><b>Series B:</b> $10 base unit</div>
+        <div style="margin-top:12px;"><b>Tier 2:</b> $10 base unit</div>
         <div class="muted" style="margin-top:6px;">
           Target: +$80 • Stop: -$200 • Cap: $60
         </div>
 
         <div style="margin-top:12px;">
-          Auto Series: If Series A hits SL, exactly one Series B game is triggered.
+          Auto Tier: If Tier 1 hits SL, exactly one Tier 2 game is triggered.
         </div>
       `
     },
