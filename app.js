@@ -977,7 +977,6 @@ function submitPending(){
 
     $("selectedOutcome").textContent = S.pendingOutcome ? formatOutcome(S.pendingOutcome) : "—";
     $("submitSelBtn").disabled = !S.pendingOutcome || S.endModalOpen;
-    $("clearSelBtn").disabled = !S.pendingOutcome || S.endModalOpen;
 
     let nextSide = "—";
     let nextBet = "—";
@@ -1043,7 +1042,6 @@ function submitPending(){
   $("exportCsvBtn").addEventListener("click", ()=>exportCSV());
 
   $("submitSelBtn").addEventListener("click", ()=>submitPending());
-  $("clearSelBtn").addEventListener("click", ()=>clearSelection());
   $("undoBtn").addEventListener("click", ()=>undo());
 
   document.querySelectorAll(".infoBtn").forEach(btn=>{
