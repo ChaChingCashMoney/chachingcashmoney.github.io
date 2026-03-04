@@ -1,7 +1,11 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-  const APP_VERSION = "2.1.5";
+  const APP_VERSION = "2.1.6";
   const RELEASE_NOTES = {
+    "2.1.6": [
+      "Fixed Clear selection button in the Play screen.",
+      "Enhanced mobile layout to reduce accidental taps."
+    ],
     "2.1.5": [
       "Refined Learn Strategy section for improved clarity and structured tone.",
       "Updated Quick Help panel for clearer live-session guidance.",
