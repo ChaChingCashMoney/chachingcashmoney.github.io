@@ -856,6 +856,14 @@ function submitPending(){
 
   save(); render();
 }
+  
+  function clearSelection(){
+  if (S.endModalOpen) return;
+
+  S.pendingOutcome = null;
+  save();
+  render();
+}
 
   function exportCSV(){
     const cols = ["idx","ts","gameNo","series","gameType","outcome","pick","bet","result","delta","gamePnL",
