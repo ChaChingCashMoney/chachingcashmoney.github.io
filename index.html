@@ -707,12 +707,12 @@ body.show-advanced [data-adv="inlineflex"]{
         <div class="sep"></div>
 
 <label style="margin:0;display:flex;gap:8px;align-items:center;">
-  Series
+  Tier
   <span class="infoBtn" data-tip="series">i</span>
 </label>
         <select id="series">
-          <option value="A">Series A ($5 Base)</option>
-          <option value="B">Series B ($10 Base)</option>
+          <option value="A">Tier 1 ($5 Base)</option>
+          <option value="B">Tier 2 ($10 Base)</option>
         </select>
 
         <div class="sep"></div>
@@ -729,7 +729,7 @@ body.show-advanced [data-adv="inlineflex"]{
           <div class="toggle">
             <input type="checkbox" id="autoSeries"/>
             <label style="margin:0;display:flex;gap:8px;align-items:center;">
-              Auto Series
+              Auto Tier
               <span class="infoBtn" data-tip="autoSeries">i</span>
             </label>
           </div>
@@ -818,7 +818,7 @@ body.show-advanced [data-adv="inlineflex"]{
           <span class="hudPill"><span class="k">GAME PnL</span> <span class="v" id="gamePnL">0</span></span>
         </div>
         <div class="hudRight" data-adv="flex">
-          <span class="hudPill"><span class="k">SERIES</span> <span class="v" id="seriesShow">—</span></span>
+          <span class="hudPill"><span class="k">TIER</span> <span class="v" id="seriesShow">—</span></span>
           <span class="hudPill"><span class="k">MODE</span> <span class="v" id="mode">—</span></span>
           <span class="hudPill"><span class="k">STATE</span> <span class="v" id="state">NORMAL</span></span>
           <span class="infoBtn" id="hudInfoBtn" title="Quick help">i</span>
@@ -895,7 +895,7 @@ body.show-advanced [data-adv="inlineflex"]{
           <table>
             <thead>
               <tr>
-                <th>#</th><th>Game#</th><th>Series</th><th>Type</th>
+                <th>#</th><th>Game#</th><th>Tier</th><th>Type</th>
                 <th>Outcome</th><th>Pick</th><th class="right">Bet</th>
                 <th>Result</th><th class="right">ΔPnL</th><th class="right">GamePnL</th>
                 <th>Mode</th><th>State</th><th class="right">Ledger</th><th>Note</th>
@@ -972,11 +972,11 @@ body.show-advanced [data-adv="inlineflex"]{
     <li><b>Phased Progression:</b> The framework transitions between NORMAL, STREAK, and SPLIT phases depending on session conditions.</li>
   </ul>
 
-  <h3 style="margin:14px 0 8px;">Series Structure</h3>
+  <h3 style="margin:14px 0 8px;">Tier Structure</h3>
   <ul style="margin:0 0 10px; padding-left:18px;">
-    <li><b>Series A:</b> Base $5 · Target +$40 · Stop −$100 · Cap $30</li>
-    <li><b>Series B:</b> Base $10 · Target +$80 · Stop −$200 · Cap $60</li>
-    <li><b>Auto Series:</b> When enabled, a Series A stop-loss activates one Series B session before returning to Series A.</li>
+    <li><b>Tier 1:</b> Base $5 · Target +$40 · Stop −$100 · Cap $30</li>
+    <li><b>Tier 2:</b> Base $10 · Target +$80 · Stop −$200 · Cap $60</li>
+    <li><b>Auto Tier:</b> When enabled, a Tier 1 stop-loss activates one Tier 2 session before returning to Tier 1.</li>
   </ul>
 
   <h3 style="margin:14px 0 8px;">Directional Adjustment</h3>
@@ -1126,7 +1126,7 @@ body.show-advanced [data-adv="inlineflex"]{
 <div><b>End the day at:</b></div>
 
 <div class="disciplineSubtle muted" style="margin-top:6px;">
-  Default targets assume a <b>$5 base unit</b> (Series A).
+  Default targets assume a <b>$5 base unit</b> (Tier 1).
 </div>
 
 <div class="disciplineTargets" style="margin-top:10px;">
@@ -1137,7 +1137,7 @@ body.show-advanced [data-adv="inlineflex"]{
 <div class="sep" style="margin:14px 0;"></div>
 
 <div class="disciplineSubtle muted">
-  <b>Series B Exclusive ($10 base only):</b>
+  <b>Tier 2 Exclusive ($10 base only):</b>
 </div>
 
 <div class="disciplineTargets" style="margin-top:10px; opacity:.9;">
