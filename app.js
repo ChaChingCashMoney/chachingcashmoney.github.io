@@ -1,7 +1,12 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-  const APP_VERSION = "2.1.7";
+  const APP_VERSION = "2.1.8";
   const RELEASE_NOTES = {
+    "2.1.8": [
+      "Updated app branding to EdgeTracker across install and iOS web-app settings.",
+      "Improved Home Screen installation behavior and icon support.",
+      "Minor PWA configuration improvements for better device compatibility."
+    ],
     "2.1.7": [
       "Added responsible-play disclaimers to Learn Strategy and Quick Help.",
       "Clarified that the app does not modify game odds and outcomes remain subject to house edge."
