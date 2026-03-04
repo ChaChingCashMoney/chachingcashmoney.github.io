@@ -1,7 +1,11 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-  const APP_VERSION = "2.1.6";
+  const APP_VERSION = "2.1.7";
   const RELEASE_NOTES = {
+    "2.1.7": [
+      "Added responsible-play disclaimers to Learn Strategy and Quick Help.",
+      "Clarified that the app does not modify game odds and outcomes remain subject to house edge."
+    ],
     "2.1.6": [
       "Fixed Clear selection button in the Play screen.",
       "Enhanced mobile layout to reduce accidental taps."
