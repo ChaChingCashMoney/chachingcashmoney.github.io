@@ -1,7 +1,7 @@
 {
   "name": "EdgeTracker",
   "short_name": "EdgeTracker",
-  "description": "Session tracking tool for even-money casino games such as roulette and baccarat.",
+  "description": "EdgeTracker betting assistant using an adaptive phase progression engine for even-money table games.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
