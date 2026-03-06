@@ -1,7 +1,12 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-  const APP_VERSION = "2.2.1";
+  const APP_VERSION = "2.2.2";
   const RELEASE_NOTES = {
+    "2.2.2": [
+      "Fixed HTML layout structure affecting Play view rendering.",
+      "Restored 'No game started' guidance message on the Play tab.",
+      "Improved UI consistency and stability across session states."
+    ],
     "2.2.1": [
       "Fixed 'How It Works' modal layout so Copy Text and Close buttons display correctly inside the modal.",
       "Updated end-of-game modal to align with terminology used throughout the interface.",
@@ -1085,8 +1090,9 @@ function submitPending(){
     $("splitPhase").textContent = (S.phase === "SPLIT") ? (S.splitPhase || "—") : "—";
     $("nextSplitBet").textContent = (S.phase === "SPLIT") ? String(toInt(S.nextSplitBet || p.min)) : "—";
 
-    console.log("RENDER HIT", { inGame: S.inGame, gameNo: S.gameNo, hintEl: !!$("hint") });
-    $("hint").textContent = "TEST HINT IS LIVE";
+    $("hint").textContent = (!S.inGame)
+      ? "No game started. Go to Setup and tap “Start Game” to begin."
+      : "";
 
     $("endBackdrop").style.display = S.endModalOpen ? "flex" : "none";
     renderLog();
