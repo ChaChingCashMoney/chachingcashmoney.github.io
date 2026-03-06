@@ -1,8 +1,8 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-  const APP_VERSION = "2.1.9";
+  const APP_VERSION = "2.2.0";
   const RELEASE_NOTES = {
-    "2.1.9": [
+    "2.2.0": [
       "Improved 'How It Works' documentation with clearer structure and reduced redundancy.",
       "Refined framework introduction and session resolution wording for better clarity.",
       "Removed unnecessary live-play hint messages to simplify the Play screen experience.",
