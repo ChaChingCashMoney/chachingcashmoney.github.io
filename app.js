@@ -1,7 +1,15 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-  const APP_VERSION = "2.1.8";
+  const APP_VERSION = "2.1.9";
   const RELEASE_NOTES = {
+    "2.1.9": [
+      "Improved 'How It Works' documentation with clearer structure and reduced redundancy.",
+      "Refined framework introduction and session resolution wording for better clarity.",
+      "Removed unnecessary live-play hint messages to simplify the Play screen experience.",
+      "Removed unused Play-tab info icon that previously opened an empty tooltip modal.",
+      "CSV export updated for consistency with the UI.",
+      "Minor wording, UI polish, and documentation improvements."
+    ],
     "2.1.8": [
       "Updated app branding to EdgeTracker across install and iOS web-app settings.",
       "Improved Home Screen installation behavior and icon support.",
