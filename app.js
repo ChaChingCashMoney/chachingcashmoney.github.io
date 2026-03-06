@@ -3,7 +3,7 @@
   const APP_VERSION = "2.2.1";
   const RELEASE_NOTES = {
     "2.2.1": [
-      "Fixed Strategy modal layout so Copy Text and Close buttons display correctly inside the modal.",
+      "Fixed 'How It Works' modal layout so Copy Text and Close buttons display correctly inside the modal.",
       "Updated end-of-game modal to align with terminology used throughout the interface.",
       "Minor UI consistency and wording improvements."
     ],
