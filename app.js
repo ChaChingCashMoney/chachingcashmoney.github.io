@@ -1085,13 +1085,9 @@ function submitPending(){
     $("splitPhase").textContent = (S.phase === "SPLIT") ? (S.splitPhase || "—") : "—";
     $("nextSplitBet").textContent = (S.phase === "SPLIT") ? String(toInt(S.nextSplitBet || p.min)) : "—";
 
-    let hintText = "";
-
-    if(!S.inGame){
-    hintText = "No game started. Go to Setup and tap “Start Game” to begin.";
-  }
-
-    $("hint").textContent = hintText;
+    $("hint").textContent = (!S.inGame)
+      ? "No game started. Go to Setup and tap “Start Game” to begin."
+      : "";
 
     $("endBackdrop").style.display = S.endModalOpen ? "flex" : "none";
     renderLog();
