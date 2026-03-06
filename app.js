@@ -553,6 +553,11 @@ function undo(){
   }
 
   function startNewGame(){
+    if (S.inGame && !S.endModalOpen) {
+      const ok = confirm("A game is already in progress. Start a new game anyway? This will reset the current game state.");
+      if (!ok) return;
+    }
+
     pushUndo();
     if(S.autoSeries && S.pendingOneB) S.series = "B";
     const p = currentParams();
@@ -881,7 +886,31 @@ function submitPending(){
   function exportCSV(){
     const cols = ["idx","ts","gameNo","series","gameType","outcome","pick","bet","result","delta","gamePnL",
       "mode","modeLosses","phase","ledger","splitPhase","nextSplitBet","ladderBet","consecWinsSame","note"];
-    const lines = [cols.join(",")];
+
+    const headerMap = {
+      idx: "idx",
+      ts: "ts",
+      gameNo: "gameNo",
+      series: "tier",
+      gameType: "gameType",
+      outcome: "outcome",
+      pick: "pick",
+      bet: "bet",
+      result: "result",
+      delta: "delta",
+      gamePnL: "gamePnL",
+      mode: "mode",
+      modeLosses: "modeLosses",
+      phase: "phase",
+      ledger: "ledger",
+      splitPhase: "splitPhase",
+      nextSplitBet: "nextSplitBet",
+      ladderBet: "ladderBet",
+      consecWinsSame: "consecWinsSame",
+      note: "note"
+    };
+
+    const lines = [cols.map(c => headerMap[c] || c).join(",")];
     for(const r of S.log){
       const row = cols.map(c=>{
         let v = (r[c] ?? "");
@@ -895,28 +924,35 @@ function submitPending(){
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `APP_session_${S.sessionId}.csv`;
+    a.download = `EdgeTracker_session_${S.sessionId}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   }
 
   function applyBankroll(){
-    pushUndo();
     const on = $("bankrollOn").checked;
-    S.bankrollOn = on;
-
     const startStr = $("bankrollStart").value.trim();
+
+    let parsedStart = null;
+
     if(startStr.length){
       const n = Number(startStr);
-      if(!Number.isFinite(n)){ alert("Starting bankroll must be a number."); return; }
+      if(!Number.isFinite(n)){
+        alert("Starting bankroll must be a number.");
+        render();
+        return;
+      }
+      parsedStart = toInt(n);
+    }
 
-      // Whole-dollar system: bankroll values stored as integers
-      const whole = toInt(n);
-      S.bankrollStart = whole;
-      S.bankrollCurrent = whole;
+    pushUndo();
 
-      // Keep the input clean visually too
-      $("bankrollStart").value = String(whole);
+    S.bankrollOn = on;
+
+    if(parsedStart !== null){
+      S.bankrollStart = parsedStart;
+      S.bankrollCurrent = parsedStart;
+      $("bankrollStart").value = String(parsedStart);
     } else {
       if(S.bankrollStart == null){
         S.bankrollStart = null;
@@ -924,7 +960,8 @@ function submitPending(){
       }
     }
 
-    save(); render();
+    save();
+    render();
   }
 
   function newEvening(){
