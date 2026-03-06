@@ -4,7 +4,7 @@
 ![Platform](https://img.shields.io/badge/Platform-PWA-blue)
 ![Use](https://img.shields.io/badge/Use-Personal%20%2F%20Educational-lightgrey)
 
-EdgeTracker is a Progressive Web App (PWA) designed to assist with structured betting sessions for even-money table games such as roulette and baccarat.
+EdgeTracker is a betting assistant that uses an adaptive phase progression engine to help organize structured betting sessions for even-money table games such as roulette and baccarat.
 
 The application helps organize bet sizing, directional alignment, and session boundaries during live play while maintaining a consistent betting structure.
 
