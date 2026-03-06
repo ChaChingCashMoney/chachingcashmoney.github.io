@@ -303,14 +303,15 @@
           Target: +$80 • Stop: -$200 • Cap: $60
         </div>
 
-       <div style="margin-top:12px;">
-          <b>Suggested bankroll:</b>
-          <br>Tier 1: $600
-          <br>Tier 2: $1,200
+        <div style="margin-top:12px;"><b>Suggested Bankroll</b></div>
+        <div class="muted" style="margin-top:6px;">
+          Tier 1: $600<br>
+          Tier 2: $1,200
         </div>
 
-        <div style="margin-top:12px;">
-          Auto Tier: If Tier 1 hits SL, exactly one Tier 2 game is triggered before returning to Tier 1.
+        <div style="margin-top:12px;"><b>Auto Tier</b></div>
+        <div class="muted" style="margin-top:6px;">
+          If Tier 1 reaches its Stop Loss, the next game runs one Tier 2 session before returning to Tier 1.
         </div>
       `
     },
