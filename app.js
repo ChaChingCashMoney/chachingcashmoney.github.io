@@ -1,7 +1,12 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-  const APP_VERSION = "2.2.6";
+  const APP_VERSION = "2.2.7";
   const RELEASE_NOTES = {
+    "2.2.7": [
+      "Updated 'How It Works' wording for consistency with EdgeTracker branding.",
+      "Replaced remaining 'framework' references with clearer betting assistant language.",
+      "Minor documentation and UI text improvements."
+    ],
     "2.2.6": [
       "Added totals row to CSV export showing the session net result.",
       "Improved spreadsheet usability with clearer CSV column headers.",
