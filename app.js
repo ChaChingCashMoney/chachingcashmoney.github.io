@@ -295,7 +295,7 @@
         </div>
 
         <div style="margin-top:12px;">
-          Auto Tier: If Tier 1 hits SL, exactly one Tier 2 game is triggered.
+          Auto Tier: If Tier 1 hits SL, exactly one Tier 2 game is triggered before returning to Tier 1.
         </div>
       `
     },
