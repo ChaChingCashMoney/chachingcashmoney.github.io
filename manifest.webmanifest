@@ -1,7 +1,7 @@
 {
   "name": "EdgeTracker",
   "short_name": "EdgeTracker",
-  "description": "EdgeTracker betting assistant using an adaptive phase progression engine for even-money table games.",
+  "description": "EdgeTracker is a betting assistant using an adaptive phase progression engine for even-money table games.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -9,6 +9,12 @@
   "background_color": "#041A14",
   "theme_color": "#041A14",
   "icons": [
+    {
+      "src": "/icons/icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
     {
       "src": "/icons/icon-192.png",
       "sizes": "192x192",
