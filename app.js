@@ -1064,20 +1064,13 @@ function submitPending(){
     $("splitPhase").textContent = (S.phase === "SPLIT") ? (S.splitPhase || "—") : "—";
     $("nextSplitBet").textContent = (S.phase === "SPLIT") ? String(toInt(S.nextSplitBet || p.min)) : "—";
 
-    const hint = [];
-    if(S.endModalOpen){
-      hint.push("Game ended. Close the popup or start the next game.");
-    } else if(!S.inGame){
-      hint.push("No game started. Go to Setup and tap “Start Game” to begin.");
-    } else if(!S.observed){
-      hint.push("Observation Phase: Select the side of the previous spin/hand and press Submit to begin.");
-    } else {
-      hint.push(`Series ${S.series} TP/SL: ${p.tp} / ${p.sl}.`);
-      if(S.phase === "STREAK") hint.push("STREAK: press +base each win; TP ends when streak loses.");
-      if(S.phase === "SPLIT") hint.push("SPLIT: probe min → half-pay → remainder; tie push repeats same split bet.");
-      if(S.autoSeries && S.pendingOneB) hint.push("Auto Series armed: next game will be Series B (one game).");
-    }
-    $("hint").textContent = hint.join(" ");
+    let hintText = "";
+
+    if(!S.inGame){
+    hintText = "No game started. Go to Setup and tap “Start Game” to begin.";
+  }
+
+    $("hint").textContent = hintText;
 
     $("endBackdrop").style.display = S.endModalOpen ? "flex" : "none";
     renderLog();
