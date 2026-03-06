@@ -1,7 +1,12 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-  const APP_VERSION = "2.2.2";
+  const APP_VERSION = "2.2.3";
   const RELEASE_NOTES = {
+    "2.2.3": [
+      "Removed the in-progress game confirmation prompt when starting a new game.",
+      "Improved game start behavior and session flow consistency.",
+      "Minor UI and stability improvements."
+    ],
     "2.2.2": [
       "Fixed HTML layout structure affecting Play view rendering.",
       "Restored 'No game started' guidance message on the Play tab.",
@@ -579,11 +584,6 @@ function undo(){
   }
 
   function startNewGame(){
-    if (S.inGame && !S.endModalOpen) {
-      const ok = confirm("A game is already in progress. Start a new game anyway? This will reset the current game state.");
-      if (!ok) return;
-    }
-
     pushUndo();
     if(S.autoSeries && S.pendingOneB) S.series = "B";
     const p = currentParams();
