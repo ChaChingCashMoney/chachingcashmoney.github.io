@@ -1,7 +1,12 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-  const APP_VERSION = "2.2.0";
+  const APP_VERSION = "2.2.1";
   const RELEASE_NOTES = {
+    "2.2.1": [
+      "Fixed Strategy modal layout so Copy Text and Close buttons display correctly inside the modal.",
+      "Updated end-of-game modal to align with terminology used throughout the interface.",
+      "Minor UI consistency and wording improvements."
+    ],
     "2.2.0": [
       "Improved 'How It Works' documentation with clearer structure and reduced redundancy.",
       "Refined framework introduction and session resolution wording for better clarity.",
@@ -544,7 +549,7 @@ function undo(){
 
     $("endTitle").textContent = `GAME ENDED — ${endedBy}`;
     $("endBody").innerHTML = `
-      <div><b>Series:</b> ${S.series} &nbsp; <span class="muted">(TP/SL ${p.tp} / ${p.sl})</span></div>
+      <div><b>Tier:</b> ${S.series} &nbsp; <span class="muted">(TP/SL ${p.tp} / ${p.sl})</span></div>
       <div style="margin-top:8px;"><b>Final Game P&L:</b> ${toInt(finalPnL)}</div>
       ${bankrollLine}
     `;
