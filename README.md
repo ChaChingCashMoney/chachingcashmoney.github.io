@@ -20,14 +20,11 @@ https://chachingcashmoney.github.io/
 
 ## App Preview
 
-### Setup
-![Setup Screen](docs/setup.png)
-
-### Play
-![Play Screen](docs/play.png)
-
-### Log
-![Session Log](docs/log.png)
+<p align="center">
+  <a href="docs/setup.png"><img src="docs/setup.png" width="30%"></a>
+  <a href="docs/play.png"><img src="docs/play.png" width="30%"></a>
+  <a href="docs/log.png"><img src="docs/log.png" width="30%"></a>
+</p>
 
 ---
 
