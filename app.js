@@ -1,7 +1,14 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-  const APP_VERSION = "2.2.7";
+  const APP_VERSION = "2.2.8";
   const RELEASE_NOTES = {
+    "2.2.8": [
+      "Added EdgeTracker app icon support for iOS home screen installs.",
+      "Improved Progressive Web App (PWA) configuration for better mobile install compatibility.",
+      "Added Apple touch icon support for a native-like appearance on iPhone and iPad.",
+      "Improved mobile viewport configuration for better full-screen display on modern devices.",
+      "General PWA metadata cleanup and optimization."
+    ],
     "2.2.7": [
       "Updated 'How It Works' wording for consistency with EdgeTracker branding.",
       "Replaced remaining 'framework' references with clearer betting assistant language.",
