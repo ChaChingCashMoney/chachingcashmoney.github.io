@@ -1,7 +1,13 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-  const APP_VERSION = "2.2.5";
+  const APP_VERSION = "2.2.6";
   const RELEASE_NOTES = {
+    "2.2.6": [
+      "Added totals row to CSV export showing the session net result.",
+      "Improved spreadsheet usability with clearer CSV column headers.",
+      "Updated Bankroll Manager tooltip text to reflect current CSV export behavior.",
+      "Clarified that session results appear in CSV exports while bankroll tracking itself is not exported."
+    ],
     "2.2.5": [
       "Improved CSV export with clearer column headers for spreadsheet readability.",
       "Replaced internal field names with user-friendly labels in exported session logs.",
@@ -300,7 +306,7 @@
       body: `
         <div>Enter Starting Bankroll and press <b>Apply</b>.</div>
         <div style="margin-top:8px;">When a game ends (TP or SL), bankroll updates by that game’s final PnL.</div>
-        <div class="muted" style="margin-top:8px;">Bankroll values are not included in CSV export (by design).</div>`
+        <div class="muted" style="margin-top:8px;">Session results are included in CSV exports, but bankroll tracking itself is not exported.</div>`
     },
     advancedPlay: {
       title: "Advanced Play Stats",
@@ -948,15 +954,30 @@ function submitPending(){
     };
 
     const lines = [cols.map(c => headerMap[c] || c).join(",")];
+
+    let totalDelta = 0;
+
     for(const r of S.log){
+      totalDelta += Number(r.delta || 0);
+
       const row = cols.map(c=>{
         let v = (r[c] ?? "");
         v = String(v).replaceAll('"','""');
         if(v.includes(",") || v.includes("\n")) v = `"${v}"`;
         return v;
       }).join(",");
+
       lines.push(row);
     }
+
+    const totalsRow = cols.map(c => {
+      if (c === "idx") return "TOTAL";
+      if (c === "delta") return totalDelta;
+      return "";
+    }).join(",");
+
+    lines.push(totalsRow);
+    
     const blob = new Blob([lines.join("\n")], {type:"text/csv;charset=utf-8"});
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
