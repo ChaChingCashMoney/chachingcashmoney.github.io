@@ -1085,9 +1085,8 @@ function submitPending(){
     $("splitPhase").textContent = (S.phase === "SPLIT") ? (S.splitPhase || "—") : "—";
     $("nextSplitBet").textContent = (S.phase === "SPLIT") ? String(toInt(S.nextSplitBet || p.min)) : "—";
 
-    $("hint").textContent = (!S.inGame)
-      ? "No game started. Go to Setup and tap “Start Game” to begin."
-      : "";
+    console.log("RENDER HIT", { inGame: S.inGame, gameNo: S.gameNo, hintEl: !!$("hint") });
+    $("hint").textContent = "TEST HINT IS LIVE";
 
     $("endBackdrop").style.display = S.endModalOpen ? "flex" : "none";
     renderLog();
