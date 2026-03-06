@@ -294,12 +294,12 @@
       body: `
         <div><b>Tier 1:</b> $5 base unit</div>
         <div class="muted" style="margin-top:6px;">
-          Target: +$40 • Stop: -$100 • Cap: $30
+          Target: +$40 • Stop: -$100 • Cap: $30 • Suggested Bankroll: $600
         </div>
 
         <div style="margin-top:12px;"><b>Tier 2:</b> $10 base unit</div>
         <div class="muted" style="margin-top:6px;">
-          Target: +$80 • Stop: -$200 • Cap: $60
+          Target: +$80 • Stop: -$200 • Cap: $60 • Suggested Bankroll: $1,200
         </div>
 
         <div style="margin-top:12px;">
