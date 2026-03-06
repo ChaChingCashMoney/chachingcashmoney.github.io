@@ -1,7 +1,13 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-  const APP_VERSION = "2.2.3";
+  const APP_VERSION = "2.2.4";
   const RELEASE_NOTES = {
+    "2.2.4": [
+      "Restored Play-tab guidance messaging for pre-game and observation mode.",
+      "Observation instructions now appear only while Next Side and Next Bet are in observation mode.",
+      "Message automatically clears once observation is complete.",
+      "Minor session flow and UI consistency improvements."
+    ],
     "2.2.3": [
       "Removed the in-progress game confirmation prompt when starting a new game.",
       "Improved game start behavior and session flow consistency.",
@@ -1090,10 +1096,16 @@ function submitPending(){
     $("splitPhase").textContent = (S.phase === "SPLIT") ? (S.splitPhase || "—") : "—";
     $("nextSplitBet").textContent = (S.phase === "SPLIT") ? String(toInt(S.nextSplitBet || p.min)) : "—";
 
-    $("hint").textContent = (!S.inGame)
-      ? "No game started. Go to Setup and tap “Start Game” to begin."
-      : "";
+    let hintText = "";
 
+    if (!S.inGame) {
+      hintText = "No game started. Go to Setup and tap “Start Game” to begin.";
+    } else if (!S.observed) {
+      hintText = "Observation Mode: Select the side of the previous spin/hand and press Submit to begin.";
+    }
+
+    $("hint").textContent = hintText;
+    
     $("endBackdrop").style.display = S.endModalOpen ? "flex" : "none";
     renderLog();
   }
