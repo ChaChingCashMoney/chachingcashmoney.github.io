@@ -370,8 +370,21 @@ select option{
   }
 }
     .hudRow{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;}
-    .hudLeft{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
-    .hudRight{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+    .hudLeft{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      flex:1;
+    }
+
+    .hudRight{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
     .hudPill{padding:7px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);}
 
 /* Next Bet styling — match outcome button exactly */
@@ -831,12 +844,9 @@ body.show-advanced [data-adv="inlineflex"]{
           <span class="hudPill"><span class="k">MODE</span> <span class="v" id="mode">—</span></span>
           <span class="hudPill"><span class="k">STATE</span> <span class="v" id="state">NORMAL</span></span>
         </div>
-      </div>
-      <div class="note" style="margin-top:8px;">
-        Live view: stage outcomes, then Submit.
-      </div>
-    </div>
-
+        </div>
+        </div>
+    
     <div class="row" style="margin-top:12px;">
       <div class="card grow">
 
