@@ -1,7 +1,12 @@
 (() => {
   // ====== VERSION (bump this when you ship changes) ======
-  const APP_VERSION = "2.2.4";
+  const APP_VERSION = "2.2.5";
   const RELEASE_NOTES = {
+    "2.2.5": [
+      "Improved CSV export with clearer column headers for spreadsheet readability.",
+      "Replaced internal field names with user-friendly labels in exported session logs.",
+      "Minor export formatting improvements."
+    ],
     "2.2.4": [
       "Restored Play-tab guidance messaging for pre-game and observation mode.",
       "Observation instructions now appear only while Next Side and Next Bet are in observation mode.",
@@ -920,26 +925,26 @@ function submitPending(){
       "mode","modeLosses","phase","ledger","splitPhase","nextSplitBet","ladderBet","consecWinsSame","note"];
 
     const headerMap = {
-      idx: "idx",
-      ts: "ts",
-      gameNo: "gameNo",
-      series: "tier",
-      gameType: "gameType",
-      outcome: "outcome",
-      pick: "pick",
-      bet: "bet",
-      result: "result",
-      delta: "delta",
-      gamePnL: "gamePnL",
-      mode: "mode",
-      modeLosses: "modeLosses",
-      phase: "phase",
-      ledger: "ledger",
-      splitPhase: "splitPhase",
-      nextSplitBet: "nextSplitBet",
-      ladderBet: "ladderBet",
-      consecWinsSame: "consecWinsSame",
-      note: "note"
+      idx: "Row",
+      ts: "Timestamp",
+      gameNo: "Game #",
+      series: "Tier",
+      gameType: "Game Type",
+      outcome: "Outcome",
+      pick: "Pick",
+      bet: "Bet",
+      result: "Result",
+      delta: "PnL Change",
+      gamePnL: "Game PnL",
+      mode: "Mode",
+      modeLosses: "Mode Losses",
+      phase: "Phase",
+      ledger: "Ledger",
+      splitPhase: "Split Phase",
+      nextSplitBet: "Next Split Bet",
+      ladderBet: "Ladder Bet",
+      consecWinsSame: "Consecutive Wins (Same)",
+      note: "Note"
     };
 
     const lines = [cols.map(c => headerMap[c] || c).join(",")];
