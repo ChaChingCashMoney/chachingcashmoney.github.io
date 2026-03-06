@@ -8,6 +8,7 @@
       "Removed unnecessary live-play hint messages to simplify the Play screen experience.",
       "Removed unused Play-tab info icon that previously opened an empty tooltip modal.",
       "CSV export updated for consistency with the UI.",
+      "Added suggested bankroll guidance to the Tier info modal in Setup.",
       "Minor wording, UI polish, and documentation improvements."
     ],
     "2.1.8": [
@@ -294,12 +295,18 @@
       body: `
         <div><b>Tier 1:</b> $5 base unit</div>
         <div class="muted" style="margin-top:6px;">
-          Target: +$40 • Stop: -$100 • Cap: $30 • Suggested Bankroll: $600
+          Target: +$40 • Stop: -$100 • Cap: $30
         </div>
 
         <div style="margin-top:12px;"><b>Tier 2:</b> $10 base unit</div>
         <div class="muted" style="margin-top:6px;">
-          Target: +$80 • Stop: -$200 • Cap: $60 • Suggested Bankroll: $1,200
+          Target: +$80 • Stop: -$200 • Cap: $60
+        </div>
+
+       <div style="margin-top:12px;">
+          <b>Suggested bankroll:</b>
+          <br>Tier 1: $600
+          <br>Tier 2: $1,200
         </div>
 
         <div style="margin-top:12px;">
