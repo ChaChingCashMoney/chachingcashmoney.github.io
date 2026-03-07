@@ -1,4 +1,4 @@
-const CACHE_NAME = "site-cache-v63";
+const CACHE_NAME = "site-cache-v64";
 
 const ASSETS = [
   "/",
